@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeHarbor — Overdose Response & Drug Safety Resource Feed</title>
+  <meta name="description" content="A curated resource hub organizing vetted videos, demonstrations, and educational content on overdose response, addiction recovery, and drug safety.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="app-container">
+    
+    <!-- Pinned Header -->
+    <header>
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M8 11h8"/>
+              <path d="M12 7v8"/>
+            </svg>
+          </div>
+          <h1>SafeHarbor</h1>
+        </div>
+        
+        <div class="header-actions">
+          <!-- Cosmetic Tracker -->
+          <div class="progress-badge" id="progress-badge" title="Resources Explored Badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="progress-count">0</span> Explored
+          </div>
+          
+          <!-- Menu Button -->
+          <button class="menu-btn" id="menu-btn" aria-label="Open Menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Search Input Pinned -->
+      <div class="search-wrapper">
+        <div class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <input type="text" id="search-bar" class="search-input" placeholder="Search resources, topics, or organizations..." autocomplete="off">
+        <button id="clear-search-btn" class="clear-search-btn" aria-label="Clear search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Horizontally Scrollable Filter Chips -->
+      <div class="filter-container">
+        <!-- Topic Filters -->
+        <div class="filter-row" id="topic-filter-row">
+          <button class="filter-chip active" data-topic="all">All Topics</button>
+          <button class="filter-chip" data-topic="naloxone">Naloxone / Narcan</button>
+          <button class="filter-chip" data-topic="overdose-response">Overdose Response</button>
+          <button class="filter-chip" data-topic="fentanyl-awareness">Fentanyl Awareness</button>
+          <button class="filter-chip" data-topic="recovery-support">Recovery Support</button>
+          <button class="filter-chip" data-topic="family-support">Talking to Loved Ones</button>
+        </div>
+        
+        <!-- Audience Filters -->
+        <div class="filter-row" id="audience-filter-row">
+          <button class="filter-chip active" data-audience="all">All Audiences</button>
+          <button class="filter-chip" data-audience="teen">Teen</button>
+          <button class="filter-chip" data-audience="helper/peer">Helper & Peer</button>
+          <button class="filter-chip" data-audience="patient">Patient / Individual</button>
+          <button class="filter-chip" data-audience="clinician/educator">Clinician & Educator</button>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Main Feed -->
+    <main id="feed-container">
+      <!-- Dynamic Feed items injected here by app.js -->
+    </main>
+    
+    <!-- Pinned Emergency Banner -->
+    <div id="emergency-banner">
+      <div class="emergency-info">
+        <div class="emergency-pulse"></div>
+        <div class="emergency-text">
+          <h4>In An Emergency</h4>
+          <p>Overdose is a medical emergency.</p>
+        </div>
+      </div>
+      <div class="emergency-actions-row">
+        <button class="emergency-action-btn" id="emergency-action-btn-main">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          Get Help Now
+        </button>
+        <button class="emergency-info-btn" id="emergency-info-btn" aria-label="Emergency Steps Quick Reference">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Drawers Overlay / Backdrop -->
+  <div class="drawer-backdrop" id="drawer-backdrop">
+    
+    <!-- About / Menu Drawer -->
+    <div class="drawer" id="menu-drawer">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          About SafeHarbor
+        </h2>
+        <button class="drawer-close" id="menu-drawer-close" aria-label="Close menu">&times;</button>
+      </div>
+      
+      <div class="about-section">
+        <div class="disclaimer-box">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <div>
+            <strong>Disclaimer:</strong> This application is a curated educational resource hub. It is not a substitute for professional medical care, emergency response, or formal clinical advice. If you are experiencing a medical emergency, call 911 immediately.
+          </div>
+        </div>
+        
+        <p>
+          SafeHarbor compiles vetted drug safety guidelines, overdose response training, and recovery resources. Every content entry links directly to resources from authoritative, credentialed organizations.
+        </p>
+
+        <p><strong>Trusted Sourcing Partners:</strong></p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px;">
+          <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">SAMHSA</span>
+          <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">NIDA</span>
+          <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">CDC</span>
+          <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">Local Public Health</span>
+        </div>
+
+        <p><strong>Personalized Tools:</strong></p>
+        <div class="menu-links">
+          <div class="menu-link-item" id="menu-view-saved-btn">
+            <span>View Saved Resources</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          
+          <div class="menu-link-item" id="menu-reset-expl-btn">
+            <span>Reset Explored Counter</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Emergency Resources Drawer -->
+    <div class="drawer" id="emergency-drawer">
+      <div class="drawer-header">
+        <h2 style="color: var(--emergency-color);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          Emergency Contacts
+        </h2>
+        <button class="drawer-close" id="emergency-drawer-close" aria-label="Close emergency menu">&times;</button>
+      </div>
+      
+      <div class="emergency-drawer-body">
+        <div class="emergency-card-grid">
+          <!-- 988 Dial -->
+          <a href="tel:988" class="emergency-btn-huge red">
+            <div class="emergency-btn-huge-left">
+              <span class="num">Call or Text 988</span>
+              <span class="lbl">Suicide & Crisis Lifeline</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </a>
+          
+          <!-- SAMHSA Dial -->
+          <a href="tel:1-800-662-4357" class="emergency-btn-huge blue">
+            <div class="emergency-btn-huge-left">
+              <span class="num">1-800-662-HELP</span>
+              <span class="lbl">SAMHSA National Helpline</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </a>
+        </div>
+        
+        <div class="emergency-instruction-card">
+          <h3>Immediate Overdose Response Steps</h3>
+          <div class="emergency-steps-mini">
+            <div class="emergency-step-mini-item">
+              <span class="emergency-step-mini-num">1</span>
+              <span><strong>Shout and Rub:</strong> Try to wake them up. Rub knuckles hard on their sternum (breastbone).</span>
+            </div>
+            <div class="emergency-step-mini-item">
+              <span class="emergency-step-mini-num">2</span>
+              <span><strong>Call 911:</strong> If they are unresponsive and have slow/no breathing, dial 911 immediately.</span>
+            </div>
+            <div class="emergency-step-mini-item">
+              <span class="emergency-step-mini-num">3</span>
+              <span><strong>Naloxone:</strong> Administer Narcan nasal spray if available. Repeat after 2-3 mins if needed.</span>
+            </div>
+            <div class="emergency-step-mini-item">
+              <span class="emergency-step-mini-num">4</span>
+              <span><strong>Recovery Position:</strong> Turn them onto their side so they don't choke. Stay with them.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- Toasts -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Load Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
