@@ -1,103 +1,182 @@
 const RESOURCES_DATA = [
+  // 1. Universal / Emergency (5 items)
   {
     id: "res-1",
-    title: "[PLACEHOLDER] Understanding Naloxone (Narcan) Nasal Spray — SAMHSA",
+    title: "SAMHSA Overdose Prevention and Response Kit",
     org: "SAMHSA",
-    type: "video",
-    audiences: ["helper/peer", "patient"],
-    topics: ["naloxone", "overdose-response"],
-    url: "https://www.samhsa.gov/resource/dbh/understanding-naloxone",
-    description: "A step-by-step video guide explaining what naloxone is, how it works in the brain, and how to obtain it from local pharmacies."
+    type: "pdf",
+    audiences: ["teen", "helper/peer", "patient", "clinician/educator"],
+    topics: ["overdose-response", "naloxone"],
+    url: "https://library.samhsa.gov/sites/default/files/overdose-prevention-response-kit-pep23-03-00-001.pdf",
+    description: "A comprehensive toolkit containing guidelines, strategies, and facts on preventing drug overdose, recognizing signs, and administering naloxone."
   },
   {
     id: "res-2",
-    title: "[PLACEHOLDER] Fentanyl Myths vs. Facts — CDC",
-    org: "CDC",
-    type: "infographic",
-    audiences: ["teen", "helper/peer", "clinician/educator"],
-    topics: ["fentanyl-awareness"],
-    url: "https://www.cdc.gov/stopoverdose/fentanyl/index.html",
-    description: "A clear, visual breakdown addressing common misconceptions about skin exposure, potency, and detection methods."
+    title: "SAMHSA Official Portal",
+    org: "SAMHSA",
+    type: "article",
+    audiences: ["teen", "helper/peer", "patient", "clinician/educator"],
+    topics: ["recovery-support", "family-support"],
+    url: "https://www.samhsa.gov/",
+    description: "Official resource portal of the Substance Abuse and Mental Health Services Administration, providing support pathways and directories."
   },
   {
     id: "res-3",
-    title: "[PLACEHOLDER] Recognizing the Signs of an Opioid Overdose — NIDA",
-    org: "NIDA",
+    title: "988 Suicide & Crisis Lifeline",
+    org: "988 Lifeline",
     type: "article",
-    audiences: ["teen", "helper/peer", "patient"],
-    topics: ["overdose-response"],
-    url: "https://nida.nih.gov/publications/drugfacts/naloxone",
-    description: "Learn to recognize the critical physical signs of an active overdose, including pinpoint pupils, cold clammy skin, and shallow breathing."
+    audiences: ["teen", "helper/peer", "patient", "clinician/educator"],
+    topics: ["recovery-support", "family-support"],
+    url: "https://988lifeline.org",
+    description: "Vetted crisis support connection page, linking individuals with free, confidential help, counselors, and local prevention centers."
   },
   {
     id: "res-4",
-    title: "[PLACEHOLDER] Navigating Early Recovery: A Guide for Young Adults — SAMHSA",
-    org: "SAMHSA",
-    type: "pdf",
-    audiences: ["teen", "patient"],
-    topics: ["recovery-support"],
-    url: "https://store.samhsa.gov/product/navigating-recovery-young-adults",
-    description: "A downloadable handbook containing coping mechanisms, community resources, and peer guidance for the first 90 days of recovery."
+    title: "Narcan Training Video",
+    org: "NEXT Distro",
+    type: "video",
+    audiences: ["teen", "helper/peer", "patient", "clinician/educator"],
+    topics: ["naloxone", "overdose-response"],
+    url: "https://nextdistro.org/resources-collection/narcan-training-video-next-distro",
+    description: "An educational demonstration video covering standard overdose prevention and instructions on administering Narcan nasal spray."
   },
   {
     id: "res-5",
-    title: "[PLACEHOLDER] How to Talk to a Loved One About Substance Use — NIDA",
-    org: "NIDA",
-    type: "article",
-    audiences: ["helper/peer", "clinician/educator"],
-    topics: ["family-support"],
-    url: "https://nida.nih.gov/publications/family-checkup",
-    description: "Evidence-based communication techniques for families, focusing on reducing stigma, active listening, and setting boundaries."
+    title: "Layperson Naloxone Administration Course",
+    org: "Overdose Lifeline",
+    type: "video",
+    audiences: ["teen", "helper/peer", "patient", "clinician/educator"],
+    topics: ["naloxone", "overdose-response"],
+    url: "https://www.overdoselifeline.org/opioid-training-and-courses/layperson-naloxone-administration/",
+    description: "Online education module and demonstration detailing how a layperson can administer naloxone safely during an opioid crisis."
   },
+
+  // 2. Teen Struggling (3 items)
   {
     id: "res-6",
-    title: "[PLACEHOLDER] Naloxone Administration for School Educators — Local Health Department",
-    org: "Local Health Department",
-    type: "video",
-    audiences: ["clinician/educator"],
-    topics: ["naloxone", "overdose-response"],
-    url: "https://www.naccho.org/programs/community-health/injury-violence-prevention/naloxone",
-    description: "An instructional walkthrough video designed for teachers, administrators, and campus staff on emergency protocol."
+    title: "NIDA for Teens: Drug Facts & Science",
+    org: "NIDA",
+    type: "article",
+    audiences: ["teen"],
+    topics: ["fentanyl-awareness", "recovery-support"],
+    url: "https://www.riprc.org/resources/nida-for-teens-facts-on-drugs/",
+    description: "Youth-centered facts and research explaining the science of drug use, risks, and peer support guides."
   },
   {
     id: "res-7",
-    title: "[PLACEHOLDER] Fentanyl Awareness Toolkit for Parents — CDC",
-    org: "CDC",
-    type: "pdf",
-    audiences: ["helper/peer", "clinician/educator"],
-    topics: ["fentanyl-awareness", "family-support"],
-    url: "https://www.cdc.gov/stopoverdose/fentanyl/parents-toolkit.html",
-    description: "A downloadable toolkit with conversation starters, key facts, and local emergency contact lists for parents."
+    title: "ACF Behavioral Health for Young Adults",
+    org: "ACF",
+    type: "article",
+    audiences: ["teen"],
+    topics: ["recovery-support"],
+    url: "https://acf.gov/behavioral-health/teens-and-young-adults",
+    description: "Resources from the Administration for Children and Families focusing on mental health, resilience, and youth wellbeing."
   },
   {
     id: "res-8",
-    title: "[PLACEHOLDER] Peer Support Specialist Roles in Recovery — SAMHSA",
-    org: "SAMHSA",
+    title: "NIDA Research and Science Homepage",
+    org: "NIDA",
     type: "article",
-    audiences: ["helper/peer", "patient"],
-    topics: ["recovery-support"],
-    url: "https://www.samhsa.gov/brss-tacs/recovery-support-tools/peer-support-services",
-    description: "Exploring how lived experience helps break down recovery barriers and provides reliable community mentorship."
+    audiences: ["teen"],
+    topics: ["fentanyl-awareness", "recovery-support"],
+    url: "https://nida.nih.gov",
+    description: "The main portal for the National Institute on Drug Abuse, hosting science-based publications on addiction, prevention, and treatment."
   },
+
+  // 3. I want to help someone (3 items)
   {
     id: "res-9",
-    title: "[PLACEHOLDER] Understanding Opioid Use Disorder and Treatment Options — NIDA",
-    org: "NIDA",
-    type: "video",
-    audiences: ["patient", "clinician/educator"],
-    topics: ["recovery-support"],
-    url: "https://nida.nih.gov/publications/research-reports/medications-to-treat-opioid-addiction",
-    description: "A brief animated overview of medical treatments (MOUD) such as buprenorphine and methadone, explaining their neurological mechanism."
+    title: "Warning Signs of Substance Use Disorder",
+    org: "NAATP",
+    type: "article",
+    audiences: ["helper/peer"],
+    topics: ["family-support"],
+    url: "https://www.naatp.org/warning-signs-substance-use-disorder",
+    description: "Vetted indicators and behavior patterns compiled by the National Association of Addiction Treatment Providers to help identify SUD."
   },
   {
     id: "res-10",
-    title: "[PLACEHOLDER] Rapid Response Protocol for Community Organizers — Local Health Department",
-    org: "Local Health Department",
-    type: "infographic",
-    audiences: ["helper/peer", "clinician/educator"],
-    topics: ["overdose-response"],
-    url: "https://www.naccho.org/resources",
-    description: "A simple visual flowchart explaining how to organize naloxone distribution and community emergency plans."
+    title: "Communities Talk: Prevention and Dialogue",
+    org: "SAMHSA",
+    type: "article",
+    audiences: ["helper/peer"],
+    topics: ["family-support"],
+    url: "https://www.samhsa.gov/substance-use/prevention/communities-talk",
+    description: "Action toolkits and planning templates to help families and communities initiate prevention discussions with youth."
+  },
+  {
+    id: "res-11",
+    title: "SAMHSA Overdose Prevention and Response Toolkit",
+    org: "SAMHSA",
+    type: "pdf",
+    audiences: ["helper/peer"],
+    topics: ["overdose-response", "naloxone"],
+    url: "https://www.samhsa.gov/resource/recovery/overdose-prevention-response-toolkit",
+    description: "Detailed toolkit with response training, instructions for administering naloxone, and local response plans."
+  },
+
+  // 4. I'm a patient (3 items)
+  {
+    id: "res-12",
+    title: "Recognizing the Signs of Drug Problems",
+    org: "NIDA",
+    type: "article",
+    audiences: ["patient"],
+    topics: ["recovery-support"],
+    url: "https://nida.nih.gov/research-topics/parents-educators/conversation-starters/what-are-signs-having-problem-drugs",
+    description: "Guided indicators and self-reflection points to help individuals recognize warning signs of problematic drug use."
+  },
+  {
+    id: "res-13",
+    title: "Medications for Opioid Use Disorder (MOUD)",
+    org: "NIDA",
+    type: "article",
+    audiences: ["patient"],
+    topics: ["recovery-support"],
+    url: "https://nida.nih.gov/research-topics/medications-opioid-use-disorder",
+    description: "Clinical overview of FDA-approved medications (such as methadone, buprenorphine, and naltrexone) for OUD recovery."
+  },
+  {
+    id: "res-14",
+    title: "SAMHSA Recovery and Prevention Toolkit (Patient Edition)",
+    org: "SAMHSA",
+    type: "pdf",
+    audiences: ["patient"],
+    topics: ["overdose-response", "naloxone"],
+    url: "https://www.samhsa.gov/resource/recovery/overdose-prevention-response-toolkit",
+    description: "Patient-centered guidelines, overdose prevention tips, and evidence-based strategies for harm reduction."
+  },
+
+  // 5. I'm a clinician/educator (3 items)
+  {
+    id: "res-15",
+    title: "Teacher Resources and Lesson Plans",
+    org: "NIDA",
+    type: "article",
+    audiences: ["clinician/educator"],
+    topics: ["fentanyl-awareness", "family-support"],
+    url: "https://nida.nih.gov/research-topics/parents-educators/teachers",
+    description: "Curriculum materials, science lesson plans, and teaching tools regarding neuroscience, drug use, and teen health."
+  },
+  {
+    id: "res-16",
+    title: "NIDA Portal for Parents and Educators",
+    org: "NIDA",
+    type: "article",
+    audiences: ["clinician/educator"],
+    topics: ["family-support"],
+    url: "https://nida.nih.gov/research-topics/parents-educators",
+    description: "Evidence-based guides, conversation toolkits, and scientific resources to assist educators in youth drug prevention."
+  },
+  {
+    id: "res-17",
+    title: "Preventing Drug Use among Children and Adolescents",
+    org: "NIDA",
+    type: "pdf",
+    audiences: ["clinician/educator"],
+    topics: ["family-support"],
+    url: "https://nida.nih.gov/sites/default/files/redbook_0.pdf",
+    description: "Research-based prevention guide for community leaders, clinicians, and educators, detailing effective youth programming principles."
   }
 ];
 
