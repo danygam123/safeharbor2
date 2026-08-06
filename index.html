@@ -169,6 +169,31 @@
             </svg>
           </div>
           
+          <div class="menu-link-item" id="menu-open-goals-btn">
+            <span>Goals & Analytics</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </div>
+
+          <div class="menu-link-item" id="menu-open-portal-btn">
+            <span>Volunteer & Admin Portal</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+          </div>
+
+          <div class="menu-link-item" id="menu-change-role-btn">
+            <span>Change Default Role</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+          </div>
+          
           <div class="menu-link-item" id="menu-reset-expl-btn">
             <span>Reset Explored Counter</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -241,7 +266,254 @@
         </div>
       </div>
     </div>
+
+    <!-- Goals & Progress Drawer -->
+    <div class="drawer" id="goals-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          Goals & Analytics
+        </h2>
+        <button class="drawer-close" id="goals-drawer-close" aria-label="Close goals menu">&times;</button>
+      </div>
+      
+      <div class="drawer-body" style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 20px;">
+        <!-- Add a New Goal -->
+        <div class="goals-card-section">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Set a Personal Goal</h3>
+          <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px;">Setting low-pressure learning goals helps build consistent safety awareness.</p>
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <input type="text" id="goal-input" placeholder="e.g., watch 2 videos this week" style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;" autocomplete="off">
+            <button id="add-goal-btn" class="visit-btn" style="padding: 0 16px; font-size: 0.85rem; border: none; cursor: pointer; border-radius: 8px;">Save</button>
+          </div>
+          <div id="active-goal-container" style="margin-top: 12px; display: none; padding: 12px; background: var(--secondary-glow); border: 1px solid rgba(99,102,241,0.25); border-radius: 8px;">
+            <span style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: #a5b4fc; display: block; letter-spacing: 0.5px;">Active Goal</span>
+            <p id="active-goal-text" style="font-size: 0.88rem; font-weight: 600; margin-top: 4px; color: white;"></p>
+            <span id="active-goal-time" style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 4px;"></span>
+          </div>
+        </div>
+        
+        <!-- Progress Summary (Analytics) -->
+        <div class="goals-card-section" style="border-top: 1px solid var(--panel-border); padding-top: 16px;">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white; margin-bottom: 8px;">My Analytics</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; text-align: center;">
+              <span style="font-size: 1.3rem; font-weight: 800; color: white;" id="total-goals-count">0</span>
+              <span style="font-size: 0.62rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700; margin-top: 2px;">Total Set</span>
+            </div>
+            <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 10px; text-align: center;">
+              <span style="font-size: 1.3rem; font-weight: 800; color: var(--success-color);" id="met-goals-count">0</span>
+              <span style="font-size: 0.62rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700; margin-top: 2px;">Met</span>
+            </div>
+            <div style="background: rgba(244, 63, 94, 0.05); border: 1px solid rgba(244, 63, 94, 0.2); border-radius: 8px; padding: 10px; text-align: center;">
+              <span style="font-size: 1.3rem; font-weight: 800; color: var(--emergency-color);" id="unmet-goals-count">0</span>
+              <span style="font-size: 0.62rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700; margin-top: 2px;">Not Met</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Goals History Timeline -->
+        <div class="goals-card-section" style="border-top: 1px solid var(--panel-border); padding-top: 16px; display: flex; flex-direction: column;">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white; margin-bottom: 8px;">Goal History Log</h3>
+          <div id="goals-history-list" style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: 200px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Volunteer & Admin Portal Drawer -->
+    <div class="drawer" id="volunteer-admin-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          Volunteer & Admin
+        </h2>
+        <button class="drawer-close" id="volunteer-admin-drawer-close" aria-label="Close portal menu">&times;</button>
+      </div>
+      
+      <!-- Tab selectors inside drawer -->
+      <div style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px;">
+        <button id="portal-tab-volunteer" class="filter-chip active" style="flex: 1; border: none; justify-content: center;">Volunteer Portal</button>
+        <button id="portal-tab-admin" class="filter-chip" style="flex: 1; border: none; justify-content: center;">Admin Dashboard</button>
+      </div>
+
+      <div class="drawer-body" style="display: flex; flex-direction: column; gap: 16px; padding-bottom: 20px; overflow-y: auto;">
+        
+        <!-- SECTION 1: VOLUNTEER VIEW -->
+        <div id="volunteer-section-wrapper" style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- A. Volunteer Registration Form -->
+          <div id="volunteer-signup-box">
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Register as a Volunteer</h3>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px; margin-top: 2px;">Submit drug safety and educational content to expand the community feed.</p>
+            <form id="volunteer-signup-form" style="display: flex; flex-direction: column; gap: 10px;">
+              <input type="text" id="vol-name" placeholder="Full Name" required style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              <input type="email" id="vol-email" placeholder="Email Address" required style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              <input type="text" id="vol-affiliation" placeholder="School, Club, or Organization" required style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              <button type="submit" class="visit-btn" style="border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px;">Sign Up</button>
+            </form>
+          </div>
+          
+          <!-- B. Volunteer Post Video Form (Initially Hidden) -->
+          <div id="volunteer-post-box" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Post a Video</h3>
+              <button id="vol-logout-btn" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.72rem; cursor: pointer; text-decoration: underline;">Logout</button>
+            </div>
+            <p id="vol-welcome-msg" style="font-size: 0.75rem; color: var(--accent-color); margin-bottom: 12px; font-weight: 500;"></p>
+            
+            <form id="volunteer-post-form" style="display: flex; flex-direction: column; gap: 10px;">
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Video Title</label>
+                <input type="text" id="post-title" placeholder="e.g., Fentanyl Awareness Guide" required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              </div>
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Video URL / Link</label>
+                <input type="url" id="post-url" placeholder="e.g., https://youtube.com/watch?v=..." required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              </div>
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Audience Group</label>
+                <select id="post-audience" required style="width: 100%; background: #0f172a; border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem; outline: none;">
+                  <option value="teen">Teen</option>
+                  <option value="helper/peer">Helper & Peer</option>
+                  <option value="patient">Patient / Individual</option>
+                  <option value="clinician/educator">Clinician & Educator</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Brief Description</label>
+                <textarea id="post-desc" placeholder="Summary of what this video teaches..." required rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem; font-family: inherit; resize: none;"></textarea>
+              </div>
+              <button type="submit" class="visit-btn" style="border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px; margin-top: 4px;">Submit Video for Review</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- SECTION 2: ADMIN VIEW -->
+        <div id="admin-section-wrapper" style="display: none; flex-direction: column; gap: 16px;">
+          <!-- A. Admin Password Form -->
+          <div id="admin-login-box">
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Admin Portal Login</h3>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px; margin-top: 2px;">Enter credentials to approve or reject pending volunteer videos.</p>
+            <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 10px;">
+              <input type="password" id="admin-pass" placeholder="Enter Admin Password" required style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              <button type="submit" class="visit-btn" style="background: var(--secondary-color); box-shadow: 0 4px 12px var(--secondary-glow); border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px;">Login</button>
+            </form>
+          </div>
+          
+          <!-- B. Admin Dashboard (Initially Hidden) -->
+          <div id="admin-dashboard-box" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Pending Submissions</h3>
+              <button id="admin-logout-btn" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.72rem; cursor: pointer; text-decoration: underline;">Logout</button>
+            </div>
+            
+            <div id="admin-queue-container" style="display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto;">
+              <!-- Dynamic pending queue list in JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
     
+  </div>
+
+  <!-- Onboarding Role Selection screen overlay -->
+  <div id="onboarding-overlay" class="onboarding-overlay" style="display: none;">
+    <div class="onboarding-card">
+      <div class="brand" style="justify-content: center; margin-bottom: 16px;">
+        <div class="brand-logo" style="color: var(--accent-color);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M8 11h8"/>
+            <path d="M12 7v8"/>
+          </svg>
+        </div>
+        <h1 style="font-size: 1.8rem; -webkit-text-fill-color: initial; background: none; color: white;">SafeHarbor</h1>
+      </div>
+      <h2>Select Your Role</h2>
+      <p class="onboarding-subtitle">Choose a role to configure your default view. You can easily switch content filters at any time.</p>
+      
+      <div class="role-grid">
+        <div class="role-select-card" data-role="teen">
+          <div class="role-icon" style="color: #6366f1; background: rgba(99, 102, 241, 0.1);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h3>Teen</h3>
+          <p>Educational facts and mental health links for teens.</p>
+        </div>
+        
+        <div class="role-select-card" data-role="helper/peer">
+          <div class="role-icon" style="color: #14b8a6; background: rgba(20, 184, 166, 0.1);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+          <h3>Helper / Peer</h3>
+          <p>Warning signs and response tools to support a loved one.</p>
+        </div>
+        
+        <div class="role-select-card" data-role="patient">
+          <div class="role-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Patient</h3>
+          <p>Opioid treatment details and self-check questions.</p>
+        </div>
+        
+        <div class="role-select-card" data-role="clinician/educator">
+          <div class="role-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+            </svg>
+          </div>
+          <h3>Professional</h3>
+          <p>Clinical curriculum, school toolkits, and prevention guides.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome Back Goal Check-in Modal -->
+  <div id="checkin-modal-overlay" class="onboarding-overlay" style="display: none; z-index: 1002;">
+    <div class="onboarding-card" style="max-width: 440px; text-align: center; gap: 8px;">
+      <div class="brand" style="justify-content: center; margin-bottom: 8px;">
+        <div class="brand-logo" style="color: var(--accent-color);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h1 style="font-size: 1.5rem; -webkit-text-fill-color: initial; background: none; color: white;">Welcome Back</h1>
+      </div>
+      <h2>Goal Progress Check-in</h2>
+      <p class="onboarding-subtitle">Did you accomplish the learning goal you set for yourself?</p>
+      
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); border-radius: 12px; padding: 18px; margin: 16px 0; border-left: 3px solid var(--secondary-color);">
+        <p id="checkin-goal-text" style="font-size: 1.05rem; font-weight: 600; color: white; line-height: 1.4; text-align: left;"></p>
+        <span id="checkin-goal-time" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 8px; text-align: left;"></span>
+      </div>
+      
+      <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+        <button id="checkin-yes-btn" class="visit-btn" style="background: var(--success-color); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); border: none; padding: 12px 24px; cursor: pointer; flex: 1; justify-content: center; border-radius: 8px;">Yes, Met it</button>
+        <button id="checkin-no-btn" class="visit-btn" style="background: var(--emergency-color); box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25); border: none; padding: 12px 24px; cursor: pointer; flex: 1; justify-content: center; border-radius: 8px;">No, Not Met</button>
+      </div>
+    </div>
   </div>
   
   <!-- Toasts -->
