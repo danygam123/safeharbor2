@@ -3,7 +3,6 @@
 # === SENSITIVE CREDENTIALS ===
 # config.js contains your Supabase URL, Anon Key, and Gemini API Key.
 # NEVER commit this file. Fill it in locally only.
-config.js
 
 # === DEPENDENCIES ===
 node_modules/
