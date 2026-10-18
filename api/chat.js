@@ -1,7 +1,7 @@
 // api/chat.js — Vercel serverless function (Node, CommonJS)
 // Keeps the Gemini API key on the server. Set these in Vercel -> Project -> Settings -> Environment Variables:
 //   GEMINI_API_KEY   (required)  your key from aistudio.google.com
-//   GEMINI_MODEL     (optional)  defaults to gemini-2.5-flash
+//   GEMINI_MODEL     (optional)  defaults to gemini-3.8-flash. Change it here (no code change) if Google retires it.
 //
 // Security model: the browser may send ONLY chat messages. The system prompt, safety settings
 // and generation settings are fixed here, so this endpoint can't be used as a general-purpose proxy.
@@ -110,7 +110,7 @@ module.exports = async function handler(req, res) {
   const contents = cleanContents(req.body && req.body.contents);
   if (!contents) return res.status(400).json({ error: "Invalid request." });
 
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const model = process.env.GEMINI_MODEL || "gemini-3.8-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
 
   const body = {
@@ -118,9 +118,13 @@ module.exports = async function handler(req, res) {
     contents,
     generationConfig: {
       temperature: 0.7,
-      maxOutputTokens: 800,
+      // Generous limit: on "thinking" models, thinking tokens count against this budget, and a small
+      // limit can leave no room for the visible reply. The system prompt keeps answers short anyway.
+      maxOutputTokens: 2048,
       topP: 0.9,
-      ...(model.includes("2.5-flash") ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+      // Only the 2.5 family needs thinking switched off; newer models reject/ignore model-specific
+      // thinking settings, so none are sent for them.
+      ...(model.includes("2.5") ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
     },
     safetySettings: [
       { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_MEDIUM_AND_ABOVE" },
