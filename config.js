@@ -24,9 +24,4 @@ window.SAFEHARBOR_CONFIG = {
 
   // Supabase anon/public key (safe for client-side use with RLS enabled)
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldWllb3NncmJvbGVzbmtndnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNzMwNzIsImV4cCI6MjEwNzg0OTA3Mn0.NLdkaVenAuTCm1bLHCqNAenpW4GR0g-t5-358EQ8rvE",
-
-  // Google Gemini API key for the AI Companion feature
-  // Note: For a public production app, move this to a server-side function.
-  // For the Congressional App Challenge demo, this client-side approach is appropriate.
-  GEMINI_API_KEY: "YOUR_GEMINI_API_KEY_HERE",
 };

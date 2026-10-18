@@ -1,6 +1,6 @@
 // ai.js — AI Educational Companion Module
-// Requires: config.js (GEMINI_API_KEY)
-// Uses Google Gemini (model set by GEMINI_MODEL in config.js) via REST API
+// Talks to /api/chat (Vercel serverless function) which holds the Gemini key server-side.
+// No API key is ever present in the browser.
 //
 // PRIVACY: The companion does NOT automatically receive journal entries
 // or check-in data. Only messages the user explicitly types are sent.
@@ -9,12 +9,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const cfg = window.SAFEHARBOR_CONFIG || {};
-  const GEMINI_KEY = cfg.GEMINI_API_KEY || "";
-  // Model is configurable in config.js (GEMINI_MODEL). gemini-1.5-* has been retired.
-  const GEMINI_MODEL = cfg.GEMINI_MODEL || "gemini-2.5-flash";
-  const GEMINI_URL =
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+  const CHAT_ENDPOINT = "/api/chat";
 
   // ── DOM refs ────────────────────────────────────────────────────
   const aiDrawer        = document.getElementById("ai-drawer");
@@ -45,56 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
     /\bunconscious\b/i, /\bunconsious\b/i, /\bnot responding\b/i, /\bstopped breathing\b/i, /\bcan't breathe\b/i, /\bunresponsive\b/i, /\bblue lips\b/i,
   ];
 
-  // ── System prompt ────────────────────────────────────────────────
-  const SYSTEM_INSTRUCTION = `You are SafeHarbor's educational wellness companion — a warm, supportive, and non-judgmental AI assistant helping people learn about substance use prevention, mental wellness, and healthy coping strategies.
-
-YOUR ROLE:
-- You are an educational support tool, NOT a therapist, doctor, or emergency service.
-- Always make clear you are an AI when directly asked.
-- You are especially appropriate for teenagers and young adults.
-- Use plain, empathetic, age-appropriate language.
-
-WHAT YOU CAN HELP WITH:
-- Explaining risks related to substance use (evidence-based, non-shaming)
-- Discussing healthy coping strategies and wellness concepts
-- Helping users learn how to respond to peer pressure
-- Providing information about how to support a friend
-- Pointing to trusted resources (SAMHSA, NIDA, 988, CDC)
-- General mental wellness education
-
-TRUSTED RESOURCES TO CITE:
-- Emergency (immediate danger): Call 911
-- Suicide & Crisis Lifeline: Call or text 988 | https://988lifeline.org
-- SAMHSA Helpline (free, confidential): 1-800-662-4357 | https://www.samhsa.gov
-- NIDA (drug education): https://nida.nih.gov
-- CDC Overdose Prevention: https://www.cdc.gov/overdose-prevention/
-
-SAFETY PROTOCOL — HIGHEST PRIORITY:
-If a user expresses immediate danger, suspected overdose, suicidal crisis, or self-harm:
-1. Respond with genuine compassion immediately.
-2. IMMEDIATELY provide: "If this is a medical emergency or you are in immediate danger, call 911 now. For mental health crisis support, call or text 988."
-3. Do NOT delay this guidance with extended conversation.
-4. Do NOT attempt to handle an emergency yourself.
-5. Clearly distinguish: 911 = immediate medical/physical emergencies, 988 = mental health crisis support.
-
-HARD RULES — NEVER VIOLATE:
-- Never recommend illegal drug use or unsafe experimentation.
-- Never diagnose addiction, depression, anxiety, or any medical condition.
-- Never claim to predict relapse or mental health crises.
-- Never claim to monitor users or contact authorities (you cannot).
-- Never invent citations, statistics, or emergency contact numbers.
-- Never discourage someone from seeking professional help.
-- If you don't know something factual, say so and point to a trusted source.
-
-RESPONSE STYLE:
-- Be warm, genuine, and concise. Avoid clinical or robotic language.
-- When citing health facts, mention the source (e.g., "According to NIDA...").
-- End responses with an open question or next step when appropriate.
-- Keep responses appropriately brief — this is a mobile-friendly chat interface.`;
-
   // ── Config wall ──────────────────────────────────────────────────
   function checkConfig() {
-    const configured = GEMINI_KEY && GEMINI_KEY !== "YOUR_GEMINI_API_KEY_HERE";
+    // The companion needs the server function, so it only works over http(s) (deployed site / vercel dev)
+    const configured = location.protocol === "http:" || location.protocol === "https:";
     if (aiConfigWall) aiConfigWall.style.display = configured ? "none" : "flex";
     if (aiChatArea)   aiChatArea.style.display   = configured ? "flex" : "none";
     return configured;
@@ -161,39 +110,19 @@ What's on your mind today?`;
     setLoading(true);
 
     try {
-      const body = {
-        system_instruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-        contents: conversationHistory,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 800,
-          topP: 0.9,
-          ...(GEMINI_MODEL.includes("2.5-flash") ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
-        },
-        safetySettings: [
-          { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-          { category: "HARM_CATEGORY_HATE_SPEECH",       threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-          { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-          { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        ],
-      };
-
-      const res = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`, {
+      const res = await fetch(CHAT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ contents: conversationHistory }),
       });
 
       if (!res.ok) {
-        const errText = await res.text();
-        console.error("Gemini API error:", res.status, errText);
+        console.error("Chat API error:", res.status);
         throw new Error(`API error ${res.status}`);
       }
 
       const json = await res.json();
-      const replyText =
-        json?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "I'm sorry, I wasn't able to generate a response. Please try again.";
+      const replyText = json?.reply || "I'm sorry, I wasn't able to generate a response. Please try again.";
 
       setLoading(false);
       const replyBubble = appendMessage("model", replyText);
