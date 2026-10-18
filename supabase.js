@@ -10,7 +10,8 @@
   "use strict";
 
   const cfg = window.SAFEHARBOR_CONFIG || {};
-  const url = cfg.SUPABASE_URL || "";
+  // Normalize: strip trailing slashes and an accidental "/rest/v1" (or "/auth/v1") suffix
+  const url = (cfg.SUPABASE_URL || "").trim().replace(/\/+$/, "").replace(/\/(rest|auth)\/v1$/, "");
   const key = cfg.SUPABASE_ANON_KEY || "";
 
   const isConfigured =
