@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SafeHarbor — Overdose Response & Drug Safety Resource Feed</title>
-  <meta name="description" content="A curated resource hub organizing vetted videos, demonstrations, and educational content on overdose response, addiction recovery, and drug safety.">
+  <title>SafeHarbor — Substance Use Prevention &amp; Wellness Support</title>
+  <meta name="description" content="A safe, nonjudgmental space for substance use prevention education, daily wellness check-ins, private journaling, and AI-powered support. Free resources from SAMHSA, NIDA, and 988.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <div id="app-container">
-    
-    <!-- Pinned Header -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         HEADER
+    ══════════════════════════════════════════════════════════════ -->
     <header>
       <div class="header-top">
         <div class="brand">
@@ -24,8 +26,17 @@
           </div>
           <h1>SafeHarbor</h1>
         </div>
-        
+
         <div class="header-actions">
+          <!-- Auth Button (new) -->
+          <button class="auth-btn" id="auth-btn" aria-label="Sign in or manage account">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Sign In
+          </button>
+
           <!-- Cosmetic Tracker -->
           <div class="progress-badge" id="progress-badge" title="Resources Explored Badge">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -34,7 +45,7 @@
             </svg>
             <span id="progress-count">0</span> Explored
           </div>
-          
+
           <!-- Menu Button -->
           <button class="menu-btn" id="menu-btn" aria-label="Open Menu">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -45,8 +56,8 @@
           </button>
         </div>
       </div>
-      
-      <!-- Search Input Pinned -->
+
+      <!-- Search Input -->
       <div class="search-wrapper">
         <div class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -62,10 +73,9 @@
           </svg>
         </button>
       </div>
-      
-      <!-- Horizontally Scrollable Filter Chips -->
+
+      <!-- Filter Chips -->
       <div class="filter-container">
-        <!-- Topic Filters -->
         <div class="filter-row" id="topic-filter-row">
           <button class="filter-chip active" data-topic="all">All Topics</button>
           <button class="filter-chip" data-topic="naloxone">Naloxone / Narcan</button>
@@ -74,24 +84,26 @@
           <button class="filter-chip" data-topic="recovery-support">Recovery Support</button>
           <button class="filter-chip" data-topic="family-support">Talking to Loved Ones</button>
         </div>
-        
-        <!-- Audience Filters -->
         <div class="filter-row" id="audience-filter-row">
           <button class="filter-chip active" data-audience="all">All Audiences</button>
           <button class="filter-chip" data-audience="teen">Teen</button>
-          <button class="filter-chip" data-audience="helper/peer">Helper & Peer</button>
+          <button class="filter-chip" data-audience="helper/peer">Helper &amp; Peer</button>
           <button class="filter-chip" data-audience="patient">Patient / Individual</button>
-          <button class="filter-chip" data-audience="clinician/educator">Clinician & Educator</button>
+          <button class="filter-chip" data-audience="clinician/educator">Clinician &amp; Educator</button>
         </div>
       </div>
     </header>
-    
-    <!-- Main Feed -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MAIN FEED
+    ══════════════════════════════════════════════════════════════ -->
     <main id="feed-container">
-      <!-- Dynamic Feed items injected here by app.js -->
+      <!-- Dynamic feed items injected by app.js -->
     </main>
-    
-    <!-- Pinned Emergency Banner -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PINNED EMERGENCY BANNER
+    ══════════════════════════════════════════════════════════════ -->
     <div id="emergency-banner">
       <div class="emergency-info">
         <div class="emergency-pulse"></div>
@@ -116,13 +128,17 @@
         </button>
       </div>
     </div>
-    
-  </div>
 
-  <!-- Drawers Overlay / Backdrop -->
+  </div><!-- /#app-container -->
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       DRAWERS OVERLAY / BACKDROP
+  ════════════════════════════════════════════════════════════════ -->
   <div class="drawer-backdrop" id="drawer-backdrop">
-    
-    <!-- About / Menu Drawer -->
+
+    <!-- ─────────────────────────────────────────────────────────────
+         MENU / ABOUT DRAWER (existing)
+    ────────────────────────────────────────────────────────────── -->
     <div class="drawer" id="menu-drawer">
       <div class="drawer-header">
         <h2>
@@ -135,7 +151,7 @@
         </h2>
         <button class="drawer-close" id="menu-drawer-close" aria-label="Close menu">&times;</button>
       </div>
-      
+
       <div class="about-section">
         <div class="disclaimer-box">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -144,23 +160,60 @@
             <line x1="12" y1="17" x2="12.01" y2="17"></line>
           </svg>
           <div>
-            <strong>Disclaimer:</strong> This application is a curated educational resource hub. It is not a substitute for professional medical care, emergency response, or formal clinical advice. If you are experiencing a medical emergency, call 911 immediately.
+            <strong>Disclaimer:</strong> SafeHarbor is an educational resource. It is not a substitute for professional medical care, emergency services, or clinical advice. If you are experiencing a medical emergency, call 911 immediately.
           </div>
         </div>
-        
-        <p>
-          SafeHarbor compiles vetted drug safety guidelines, overdose response training, and recovery resources. Every content entry links directly to resources from authoritative, credentialed organizations.
-        </p>
+
+        <p>SafeHarbor compiles vetted drug safety guidelines, overdose response training, and recovery resources from authoritative, credentialed organizations.</p>
 
         <p><strong>Trusted Sourcing Partners:</strong></p>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px;">
           <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">SAMHSA</span>
           <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">NIDA</span>
           <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">CDC</span>
-          <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">Local Public Health</span>
+          <span class="card-tag" style="background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--panel-border);">988 Lifeline</span>
         </div>
 
-        <p><strong>Personalized Tools:</strong></p>
+        <!-- Navigation links -->
+        <p style="margin-top: 16px;"><strong>My Wellness Tools:</strong></p>
+        <div class="menu-links">
+          <div class="menu-link-item" id="menu-open-auth-btn">
+            <span id="menu-auth-label">Sign In / Create Account</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+
+          <div class="menu-link-item" id="menu-open-checkin-btn">
+            <span>Daily Check-in</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+
+          <div class="menu-link-item" id="menu-open-journal-btn">
+            <span>My Journal</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+
+          <div class="menu-link-item" id="menu-open-dashboard-btn">
+            <span>My Progress</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+
+          <div class="menu-link-item" id="menu-open-ai-btn">
+            <span>Talk to Companion</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+        </div>
+
+        <p style="margin-top: 16px;"><strong>Resources &amp; Settings:</strong></p>
         <div class="menu-links">
           <div class="menu-link-item" id="menu-view-saved-btn">
             <span>View Saved Resources</span>
@@ -168,16 +221,16 @@
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
             </svg>
           </div>
-          
+
           <div class="menu-link-item" id="menu-open-goals-btn">
-            <span>Goals & Analytics</span>
+            <span>Goals &amp; Analytics</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
           </div>
 
           <div class="menu-link-item" id="menu-open-portal-btn">
-            <span>Volunteer & Admin Portal</span>
+            <span>Volunteer &amp; Admin Portal</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
@@ -187,13 +240,11 @@
           <div class="menu-link-item" id="menu-change-role-btn">
             <span>Change Default Role</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="8.5" cy="7" r="4"></circle>
-              <line x1="20" y1="8" x2="20" y2="14"></line>
-              <line x1="23" y1="11" x2="17" y2="11"></line>
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/>
+              <line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
             </svg>
           </div>
-          
+
           <div class="menu-link-item" id="menu-reset-expl-btn">
             <span>Reset Explored Counter</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -201,10 +252,19 @@
             </svg>
           </div>
         </div>
+
+        <!-- Privacy link -->
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--panel-border); text-align: center;">
+          <button id="menu-open-privacy-btn" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">
+            Privacy &amp; Data Policy
+          </button>
+        </div>
       </div>
     </div>
-    
-    <!-- Emergency Resources Drawer -->
+
+    <!-- ─────────────────────────────────────────────────────────────
+         EMERGENCY DRAWER (existing)
+    ────────────────────────────────────────────────────────────── -->
     <div class="drawer" id="emergency-drawer">
       <div class="drawer-header">
         <h2 style="color: var(--emergency-color);">
@@ -217,21 +277,18 @@
         </h2>
         <button class="drawer-close" id="emergency-drawer-close" aria-label="Close emergency menu">&times;</button>
       </div>
-      
+
       <div class="emergency-drawer-body">
         <div class="emergency-card-grid">
-          <!-- 988 Dial -->
           <a href="tel:988" class="emergency-btn-huge red">
             <div class="emergency-btn-huge-left">
               <span class="num">Call or Text 988</span>
-              <span class="lbl">Suicide & Crisis Lifeline</span>
+              <span class="lbl">Suicide &amp; Crisis Lifeline</span>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
             </svg>
           </a>
-          
-          <!-- SAMHSA Dial -->
           <a href="tel:1-800-662-4357" class="emergency-btn-huge blue">
             <div class="emergency-btn-huge-left">
               <span class="num">1-800-662-HELP</span>
@@ -242,7 +299,7 @@
             </svg>
           </a>
         </div>
-        
+
         <div class="emergency-instruction-card">
           <h3>Immediate Overdose Response Steps</h3>
           <div class="emergency-steps-mini">
@@ -252,11 +309,11 @@
             </div>
             <div class="emergency-step-mini-item">
               <span class="emergency-step-mini-num">2</span>
-              <span><strong>Call 911:</strong> If they are unresponsive and have slow/no breathing, dial 911 immediately.</span>
+              <span><strong>Call 911:</strong> If unresponsive with slow/no breathing, dial 911 immediately.</span>
             </div>
             <div class="emergency-step-mini-item">
               <span class="emergency-step-mini-num">3</span>
-              <span><strong>Naloxone:</strong> Administer Narcan nasal spray if available. Repeat after 2-3 mins if needed.</span>
+              <span><strong>Naloxone:</strong> Administer Narcan nasal spray if available. Repeat after 2–3 mins if needed.</span>
             </div>
             <div class="emergency-step-mini-item">
               <span class="emergency-step-mini-num">4</span>
@@ -267,20 +324,21 @@
       </div>
     </div>
 
-    <!-- Goals & Progress Drawer -->
+    <!-- ─────────────────────────────────────────────────────────────
+         GOALS & ANALYTICS DRAWER (existing, enhanced)
+    ────────────────────────────────────────────────────────────── -->
     <div class="drawer" id="goals-drawer" style="display: none;">
       <div class="drawer-header">
         <h2>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
-          Goals & Analytics
+          Goals &amp; Analytics
         </h2>
         <button class="drawer-close" id="goals-drawer-close" aria-label="Close goals menu">&times;</button>
       </div>
-      
+
       <div class="drawer-body" style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 20px;">
-        <!-- Add a New Goal -->
         <div class="goals-card-section">
           <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Set a Personal Goal</h3>
           <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px;">Setting low-pressure learning goals helps build consistent safety awareness.</p>
@@ -294,8 +352,7 @@
             <span id="active-goal-time" style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 4px;"></span>
           </div>
         </div>
-        
-        <!-- Progress Summary (Analytics) -->
+
         <div class="goals-card-section" style="border-top: 1px solid var(--panel-border); padding-top: 16px;">
           <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white; margin-bottom: 8px;">My Analytics</h3>
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
@@ -314,42 +371,38 @@
           </div>
         </div>
 
-        <!-- Goals History Timeline -->
         <div class="goals-card-section" style="border-top: 1px solid var(--panel-border); padding-top: 16px; display: flex; flex-direction: column;">
           <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white; margin-bottom: 8px;">Goal History Log</h3>
-          <div id="goals-history-list" style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: 200px;">
-            <!-- Rendered by JS -->
-          </div>
+          <div id="goals-history-list" style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: 200px;"></div>
         </div>
       </div>
     </div>
 
-    <!-- Volunteer & Admin Portal Drawer -->
+    <!-- ─────────────────────────────────────────────────────────────
+         VOLUNTEER & ADMIN PORTAL DRAWER (existing)
+    ────────────────────────────────────────────────────────────── -->
     <div class="drawer" id="volunteer-admin-drawer" style="display: none;">
       <div class="drawer-header">
         <h2>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
           </svg>
-          Volunteer & Admin
+          Volunteer &amp; Admin
         </h2>
         <button class="drawer-close" id="volunteer-admin-drawer-close" aria-label="Close portal menu">&times;</button>
       </div>
-      
-      <!-- Tab selectors inside drawer -->
+
       <div style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px;">
         <button id="portal-tab-volunteer" class="filter-chip active" style="flex: 1; border: none; justify-content: center;">Volunteer Portal</button>
         <button id="portal-tab-admin" class="filter-chip" style="flex: 1; border: none; justify-content: center;">Admin Dashboard</button>
       </div>
 
       <div class="drawer-body" style="display: flex; flex-direction: column; gap: 16px; padding-bottom: 20px; overflow-y: auto;">
-        
-        <!-- SECTION 1: VOLUNTEER VIEW -->
+        <!-- VOLUNTEER SECTION -->
         <div id="volunteer-section-wrapper" style="display: flex; flex-direction: column; gap: 16px;">
-          <!-- A. Volunteer Registration Form -->
           <div id="volunteer-signup-box">
             <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Register as a Volunteer</h3>
             <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px; margin-top: 2px;">Submit drug safety and educational content to expand the community feed.</p>
@@ -360,15 +413,13 @@
               <button type="submit" class="visit-btn" style="border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px;">Sign Up</button>
             </form>
           </div>
-          
-          <!-- B. Volunteer Post Video Form (Initially Hidden) -->
+
           <div id="volunteer-post-box" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Post a Video</h3>
+              <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Post a Resource</h3>
               <button id="vol-logout-btn" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.72rem; cursor: pointer; text-decoration: underline;">Logout</button>
             </div>
             <p id="vol-welcome-msg" style="font-size: 0.75rem; color: var(--accent-color); margin-bottom: 12px; font-weight: 500;"></p>
-            
             <form id="volunteer-post-form" style="display: flex; flex-direction: column; gap: 10px;">
               <div>
                 <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Video Title</label>
@@ -376,96 +427,642 @@
               </div>
               <div>
                 <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Video URL / Link</label>
-                <input type="url" id="post-url" placeholder="e.g., https://youtube.com/watch?v=..." required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+                <input type="url" id="post-url" placeholder="https://youtube.com/watch?v=..." required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
               </div>
               <div>
                 <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Audience Group</label>
                 <select id="post-audience" required style="width: 100%; background: #0f172a; border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem; outline: none;">
                   <option value="teen">Teen</option>
-                  <option value="helper/peer">Helper & Peer</option>
+                  <option value="helper/peer">Helper &amp; Peer</option>
                   <option value="patient">Patient / Individual</option>
-                  <option value="clinician/educator">Clinician & Educator</option>
+                  <option value="clinician/educator">Clinician &amp; Educator</option>
                 </select>
               </div>
               <div>
                 <label style="font-size: 0.72rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Brief Description</label>
                 <textarea id="post-desc" placeholder="Summary of what this video teaches..." required rows="3" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem; font-family: inherit; resize: none;"></textarea>
               </div>
-              <button type="submit" class="visit-btn" style="border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px; margin-top: 4px;">Submit Video for Review</button>
+              <button type="submit" class="visit-btn" style="border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px; margin-top: 4px;">Submit for Review</button>
             </form>
           </div>
         </div>
 
-        <!-- SECTION 2: ADMIN VIEW -->
+        <!-- ADMIN SECTION -->
         <div id="admin-section-wrapper" style="display: none; flex-direction: column; gap: 16px;">
-          <!-- A. Admin Password Form -->
           <div id="admin-login-box">
-            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Admin Portal Login</h3>
-            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px; margin-top: 2px;">Enter credentials to approve or reject pending volunteer videos.</p>
-            <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 10px;">
-              <input type="password" id="admin-pass" placeholder="Enter Admin Password" required style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
-              <button type="submit" class="visit-btn" style="background: var(--secondary-color); box-shadow: 0 4px 12px var(--secondary-glow); border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px;">Login</button>
-            </form>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Admin Portal</h3>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px; margin-top: 2px;">Sign in with an admin account to review and approve volunteer submissions.</p>
+            <div id="admin-login-form-wrap" style="display: flex; flex-direction: column; gap: 10px;">
+              <input type="email" id="admin-email" placeholder="Admin Email" style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              <input type="password" id="admin-pass" placeholder="Password" style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px; color: white; font-size: 0.85rem;">
+              <button id="admin-login-btn" class="visit-btn" style="background: var(--secondary-color); box-shadow: 0 4px 12px var(--secondary-glow); border: none; padding: 12px; font-size: 0.85rem; cursor: pointer; justify-content: center; border-radius: 8px;">Login as Admin</button>
+              <p style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 4px;">Admin access requires is_admin = true in your profile.</p>
+            </div>
           </div>
-          
-          <!-- B. Admin Dashboard (Initially Hidden) -->
+
           <div id="admin-dashboard-box" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
               <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: white;">Pending Submissions</h3>
               <button id="admin-logout-btn" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.72rem; cursor: pointer; text-decoration: underline;">Logout</button>
             </div>
-            
-            <div id="admin-queue-container" style="display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto;">
-              <!-- Dynamic pending queue list in JS -->
-            </div>
+            <div id="admin-queue-container" style="display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto;"></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         AUTH DRAWER (new)
+    ────────────────────────────────────────────────────────────── -->
+    <div class="drawer" id="auth-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          My Account
+        </h2>
+        <button class="drawer-close" id="auth-drawer-close" aria-label="Close account drawer">&times;</button>
+      </div>
+
+      <div class="drawer-body" style="display: flex; flex-direction: column; gap: 16px; padding-bottom: 24px;">
+
+        <!-- Tab row -->
+        <div id="auth-tabs-row" style="display: flex; gap: 8px; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px;">
+          <button id="auth-tab-signin" class="filter-chip active" style="flex: 1; justify-content: center; border: none;">Sign In</button>
+          <button id="auth-tab-signup" class="filter-chip" style="flex: 1; justify-content: center; border: none;">Create Account</button>
+        </div>
+
+        <!-- Messages -->
+        <div id="auth-error" class="auth-message error" style="display: none;"></div>
+        <div id="auth-success" class="auth-message success" style="display: none;"></div>
+
+        <!-- Sign In panel -->
+        <div id="auth-signin-panel" style="display: flex; flex-direction: column; gap: 12px;">
+          <form id="signin-form" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label" for="signin-email">Email</label>
+              <input type="email" id="signin-email" class="form-input" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signin-password">Password</label>
+              <input type="password" id="signin-password" class="form-input" placeholder="Your password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="visit-btn" data-label="Sign In" style="border: none; padding: 13px; font-size: 0.9rem; cursor: pointer; justify-content: center; border-radius: 10px; margin-top: 4px;">Sign In</button>
+          </form>
+          <button id="auth-forgot-pass" style="background: transparent; border: none; color: var(--accent-color); font-size: 0.78rem; cursor: pointer; text-decoration: underline; text-align: center;">Forgot password?</button>
+          <p style="font-size: 0.72rem; color: var(--text-muted); text-align: center; line-height: 1.5;">
+            Your check-ins, journal, and progress are private and never shared.
+          </p>
+        </div>
+
+        <!-- Sign Up panel -->
+        <div id="auth-signup-panel" style="display: none; flex-direction: column; gap: 12px;">
+          <form id="signup-form" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label" for="signup-name">First Name <span style="color: var(--text-muted);">(optional)</span></label>
+              <input type="text" id="signup-name" class="form-input" placeholder="What should we call you?" autocomplete="given-name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-email">Email</label>
+              <input type="email" id="signup-email" class="form-input" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-password">Password <span style="color: var(--text-muted);">(min 8 chars)</span></label>
+              <input type="password" id="signup-password" class="form-input" placeholder="Create a strong password" autocomplete="new-password" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-confirm">Confirm Password</label>
+              <input type="password" id="signup-confirm" class="form-input" placeholder="Repeat your password" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="visit-btn" data-label="Create Account" style="border: none; padding: 13px; font-size: 0.9rem; cursor: pointer; justify-content: center; border-radius: 10px; background: var(--success-color); box-shadow: 0 4px 14px rgba(16,185,129,0.25); margin-top: 4px;">Create Account</button>
+          </form>
+          <p style="font-size: 0.72rem; color: var(--text-muted); text-align: center; line-height: 1.5;">
+            We only collect your email to enable your account. No names, phone numbers, or location are required.
+          </p>
+        </div>
+
+        <!-- Forgot password panel -->
+        <div id="auth-forgot-panel" style="display: none; flex-direction: column; gap: 12px;">
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">Enter your email and we'll send a password reset link.</p>
+          <form id="auth-forgot-form" style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="email" id="forgot-email" class="form-input" placeholder="you@example.com" required>
+            <button type="submit" class="visit-btn" data-label="Send Reset Email" style="border: none; padding: 13px; font-size: 0.9rem; cursor: pointer; justify-content: center; border-radius: 10px;">Send Reset Email</button>
+          </form>
+          <button id="auth-forgot-back" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.78rem; cursor: pointer; text-decoration: underline; text-align: center;">← Back to sign in</button>
+        </div>
+
+        <!-- Profile panel (shown when signed in) -->
+        <div id="auth-profile-panel" style="display: none; flex-direction: column; align-items: center; gap: 16px; padding-top: 8px;">
+          <div id="auth-profile-avatar" class="auth-avatar-large" aria-hidden="true">?</div>
+          <div style="text-align: center;">
+            <div id="auth-profile-name" style="font-size: 1.15rem; font-weight: 700; color: white;"></div>
+            <div id="auth-profile-email" style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;"></div>
+          </div>
+
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
+            <button id="auth-signout-btn" class="visit-btn" style="border: none; padding: 12px; font-size: 0.9rem; cursor: pointer; justify-content: center; border-radius: 10px; background: rgba(255,255,255,0.06); box-shadow: none; color: var(--text-primary);">
+              Sign Out
+            </button>
+            <button id="auth-delete-account-btn" style="background: transparent; border: 1px solid rgba(244,63,94,0.3); color: var(--emergency-color); font-size: 0.78rem; padding: 10px; border-radius: 10px; cursor: pointer; font-family: inherit;">
+              Delete My Account &amp; Data
+            </button>
+          </div>
+
+          <p style="font-size: 0.7rem; color: var(--text-muted); text-align: center; line-height: 1.5; margin-top: 4px;">
+            Your check-ins, journal, and progress are private to your account. They are never shared.
+          </p>
         </div>
 
       </div>
     </div>
-    
-  </div>
 
-  <!-- Onboarding Role Selection screen overlay -->
+    <!-- ─────────────────────────────────────────────────────────────
+         DAILY CHECK-IN DRAWER (new)
+    ────────────────────────────────────────────────────────────── -->
+    <div class="drawer" id="checkin-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Daily Check-in
+        </h2>
+        <button class="drawer-close" id="checkin-drawer-close" aria-label="Close check-in">&times;</button>
+      </div>
+
+      <!-- Auth wall -->
+      <div id="checkin-auth-wall" class="feature-auth-wall" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <p>Sign in to save your daily check-ins and track your wellness over time.</p>
+        <button class="visit-btn" onclick="window.openDrawerById('auth-drawer')" style="border: none; padding: 12px 24px; cursor: pointer; border-radius: 10px; margin-top: 8px;">Sign In</button>
+      </div>
+
+      <div class="drawer-body" style="padding-bottom: 24px;">
+        <div id="checkin-form-wrap" style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="checkin-date-label" style="font-size: 0.82rem; color: var(--text-secondary);"></span>
+            <span id="checkin-step-count" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;"></span>
+          </div>
+
+          <!-- Step 1: Mood -->
+          <div class="checkin-step" data-step="1" style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="checkin-question">
+              <h3>How are you feeling today?</h3>
+              <p class="checkin-hint">Pick the one that feels most right. There's no wrong answer.</p>
+            </div>
+            <div class="mood-grid">
+              <button class="mood-btn" data-value="1" aria-label="Very low">
+                <span class="mood-emoji">😞</span>
+                <span class="mood-label">Very Low</span>
+              </button>
+              <button class="mood-btn" data-value="2" aria-label="Low">
+                <span class="mood-emoji">😔</span>
+                <span class="mood-label">Low</span>
+              </button>
+              <button class="mood-btn" data-value="3" aria-label="Okay">
+                <span class="mood-emoji">😐</span>
+                <span class="mood-label">Okay</span>
+              </button>
+              <button class="mood-btn" data-value="4" aria-label="Good">
+                <span class="mood-emoji">🙂</span>
+                <span class="mood-label">Good</span>
+              </button>
+              <button class="mood-btn" data-value="5" aria-label="Great">
+                <span class="mood-emoji">😊</span>
+                <span class="mood-label">Great</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Stress -->
+          <div class="checkin-step" data-step="2" style="display: none; flex-direction: column; gap: 14px;">
+            <div class="checkin-question">
+              <h3>How stressed have you felt today?</h3>
+              <p class="checkin-hint">1 = very little stress, 5 = very high stress.</p>
+            </div>
+            <div class="stress-grid">
+              <button class="stress-btn" data-value="1" aria-label="Stress 1">1<span>Very Low</span></button>
+              <button class="stress-btn" data-value="2" aria-label="Stress 2">2<span>Low</span></button>
+              <button class="stress-btn" data-value="3" aria-label="Stress 3">3<span>Moderate</span></button>
+              <button class="stress-btn" data-value="4" aria-label="Stress 4">4<span>High</span></button>
+              <button class="stress-btn" data-value="5" aria-label="Stress 5">5<span>Very High</span></button>
+            </div>
+          </div>
+
+          <!-- Step 3: Optional questions -->
+          <div class="checkin-step" data-step="3" style="display: none; flex-direction: column; gap: 16px;">
+            <div class="checkin-optional-label">Optional — skip any question you prefer not to answer</div>
+
+            <div class="checkin-question-block">
+              <p class="checkin-q">Did you feel supported by anyone today?</p>
+              <div class="yes-no-row">
+                <button class="support-btn" data-value="yes">Yes</button>
+                <button class="support-btn" data-value="no">Not really</button>
+                <button class="checkin-skip-btn" title="Skip this question">Skip</button>
+              </div>
+            </div>
+
+            <div class="checkin-question-block">
+              <p class="checkin-q">Did anything make today particularly difficult?</p>
+              <div class="yes-no-row">
+                <button class="difficult-btn" data-value="yes">Yes</button>
+                <button class="difficult-btn" data-value="no">Not especially</button>
+                <button class="checkin-skip-btn" title="Skip this question">Skip</button>
+              </div>
+              <textarea id="checkin-difficult-note" class="checkin-textarea" placeholder="What made it difficult? (optional)" rows="2" style="display: none; margin-top: 8px;"></textarea>
+            </div>
+
+            <div class="checkin-question-block">
+              <p class="checkin-q">What helped you cope today? <span style="color: var(--text-muted); font-size: 0.78rem;">(optional)</span></p>
+              <input type="text" id="checkin-coping" class="form-input" placeholder="e.g., music, a walk, talking to a friend…">
+            </div>
+          </div>
+
+          <!-- Step 4: Reflection -->
+          <div class="checkin-step" data-step="4" style="display: none; flex-direction: column; gap: 14px;">
+            <div class="checkin-question">
+              <h3>Anything you'd like to reflect on?</h3>
+              <p class="checkin-hint">This is optional and completely private to you.</p>
+            </div>
+            <textarea id="checkin-reflection" class="checkin-textarea" placeholder="Write anything that's on your mind…" rows="5"></textarea>
+          </div>
+
+          <!-- Navigation -->
+          <div class="checkin-nav-row">
+            <button id="checkin-prev" class="checkin-nav-btn secondary" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Back
+            </button>
+            <button id="checkin-next" class="checkin-nav-btn primary">
+              Next
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+            <button id="checkin-submit" class="visit-btn" style="display: none; border: none; padding: 12px 20px; font-size: 0.9rem; cursor: pointer; border-radius: 10px; background: var(--success-color); box-shadow: 0 4px 14px rgba(16,185,129,0.25);">
+              Save Check-in ✓
+            </button>
+          </div>
+        </div>
+
+        <!-- Success state -->
+        <div id="checkin-success-state" style="display: none; flex-direction: column; align-items: center; gap: 16px; padding: 24px 0; text-align: center;">
+          <div class="checkin-success-icon">✅</div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; color: white;">Today's check-in saved!</h3>
+          <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">Great job showing up for yourself today.</p>
+          <div id="checkin-success-summary" class="checkin-summary-card"></div>
+          <button id="checkin-edit-btn" style="background: transparent; border: 1px solid var(--panel-border); color: var(--text-secondary); font-size: 0.78rem; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: inherit;">
+            Edit Today's Response
+          </button>
+        </div>
+
+        <!-- History section -->
+        <div style="margin-top: 24px; border-top: 1px solid var(--panel-border); padding-top: 16px;">
+          <h4 style="font-size: 0.85rem; font-weight: 700; color: white; margin-bottom: 12px;">Recent Check-ins</h4>
+          <div id="checkin-history-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         JOURNAL DRAWER (new)
+    ────────────────────────────────────────────────────────────── -->
+    <div class="drawer drawer-wide" id="journal-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          My Journal
+        </h2>
+        <button class="drawer-close" id="journal-drawer-close" aria-label="Close journal">&times;</button>
+      </div>
+
+      <!-- Auth wall -->
+      <div id="journal-auth-wall" class="feature-auth-wall" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <p>Sign in to write private journal entries. Only you can see them.</p>
+        <button class="visit-btn" onclick="window.openDrawerById('auth-drawer')" style="border: none; padding: 12px 24px; cursor: pointer; border-radius: 10px; margin-top: 8px;">Sign In</button>
+      </div>
+
+      <div id="journal-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+        <!-- LIST VIEW -->
+        <div id="journal-list-view" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+          <div style="padding: 16px 0 12px; display: flex; justify-content: space-between; align-items: center;">
+            <p style="font-size: 0.78rem; color: var(--text-muted);">All entries are private to you.</p>
+            <button id="journal-new-btn" class="visit-btn" style="border: none; padding: 8px 16px; font-size: 0.82rem; cursor: pointer; border-radius: 8px;">
+              + New Entry
+            </button>
+          </div>
+          <div id="journal-entries-list" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0; padding-bottom: 24px;"></div>
+        </div>
+
+        <!-- EDITOR VIEW -->
+        <div id="journal-editor-view" style="display: none; flex-direction: column; flex: 1; gap: 12px; padding-bottom: 24px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="journal-cancel-btn" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Back
+            </button>
+            <span id="journal-editor-date" style="font-size: 0.75rem; color: var(--text-muted); flex: 1; text-align: right;"></span>
+          </div>
+
+          <input type="text" id="journal-editor-title" class="journal-title-input" placeholder="Title (optional)">
+
+          <div>
+            <label style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Reflection prompt (optional)</label>
+            <select id="journal-prompt-select" class="form-input" style="font-size: 0.82rem;">
+            </select>
+          </div>
+
+          <textarea id="journal-editor-content" class="journal-editor-textarea" placeholder="Start writing…"></textarea>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="journal-char-count" style="font-size: 0.7rem; color: var(--text-muted);"></span>
+            <div id="journal-editor-status" class="journal-editor-status" style="display: none;"></div>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button id="journal-save-btn" class="visit-btn" style="border: none; padding: 12px; font-size: 0.88rem; cursor: pointer; border-radius: 10px; flex: 1; justify-content: center; background: var(--success-color); box-shadow: 0 4px 14px rgba(16,185,129,0.2);">
+              Save Entry
+            </button>
+            <button id="journal-delete-btn" style="display: none; background: rgba(244,63,94,0.08); border: 1px solid rgba(244,63,94,0.25); color: var(--emergency-color); font-size: 0.82rem; padding: 12px 16px; border-radius: 10px; cursor: pointer; font-family: inherit;">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         PROGRESS DASHBOARD DRAWER (new)
+    ────────────────────────────────────────────────────────────── -->
+    <div class="drawer" id="dashboard-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          My Progress
+        </h2>
+        <button class="drawer-close" id="dashboard-drawer-close" aria-label="Close progress">&times;</button>
+      </div>
+
+      <!-- Auth wall -->
+      <div id="dashboard-auth-wall" class="feature-auth-wall" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <p>Sign in to view your personal wellness trends and progress over time.</p>
+        <button class="visit-btn" onclick="window.openDrawerById('auth-drawer')" style="border: none; padding: 12px 24px; cursor: pointer; border-radius: 10px; margin-top: 8px;">Sign In</button>
+      </div>
+
+      <!-- Loading -->
+      <div id="dashboard-loading" style="display: none; justify-content: center; align-items: center; padding: 40px;">
+        <div class="dash-spinner"></div>
+      </div>
+
+      <div id="dashboard-content" style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; overflow-y: auto;">
+        <!-- Stats row -->
+        <div class="dash-stats-grid">
+          <div class="dash-stat-card">
+            <span class="dash-stat-value" id="stat-total-checkins">—</span>
+            <span class="dash-stat-label">Check-ins</span>
+          </div>
+          <div class="dash-stat-card">
+            <span class="dash-stat-value" id="stat-avg-mood">—</span>
+            <span class="dash-stat-label">Avg Mood</span>
+          </div>
+          <div class="dash-stat-card">
+            <span class="dash-stat-value" id="stat-avg-stress">—</span>
+            <span class="dash-stat-label">Avg Stress</span>
+          </div>
+          <div class="dash-stat-card">
+            <span class="dash-stat-value" id="stat-goals-met">—</span>
+            <span class="dash-stat-label">Goals Met</span>
+          </div>
+        </div>
+
+        <!-- Mood chart -->
+        <div class="dash-chart-card">
+          <div class="dash-chart-title">
+            <span>Mood — Last 7 Days</span>
+            <span class="dash-chart-legend">
+              <span style="color: #f43f5e;">■</span> Low &nbsp;
+              <span style="color: #6366f1;">■</span> High
+            </span>
+          </div>
+          <svg id="mood-chart-svg" class="dash-chart-svg" viewBox="0 0 280 90" aria-label="Mood chart for last 7 days"></svg>
+        </div>
+
+        <!-- Stress chart -->
+        <div class="dash-chart-card">
+          <div class="dash-chart-title">
+            <span>Stress — Last 7 Days</span>
+            <span class="dash-chart-legend">
+              <span style="color: #6366f1;">■</span> Low &nbsp;
+              <span style="color: #f43f5e;">■</span> High
+            </span>
+          </div>
+          <svg id="stress-chart-svg" class="dash-chart-svg" viewBox="0 0 280 90" aria-label="Stress chart for last 7 days"></svg>
+        </div>
+
+        <!-- Recent check-ins -->
+        <div class="dash-section">
+          <h4 class="dash-section-title">Recent Check-ins</h4>
+          <div id="dash-recent-checkins"></div>
+        </div>
+
+        <!-- Coping strategies -->
+        <div class="dash-section">
+          <h4 class="dash-section-title">What's Helping You Cope</h4>
+          <div id="dash-coping-list"></div>
+        </div>
+
+        <!-- Goals summary -->
+        <div class="dash-section">
+          <h4 class="dash-section-title">Learning Goals</h4>
+          <div id="dash-goals-list"></div>
+        </div>
+
+        <!-- Weekly reflections -->
+        <div class="dash-section">
+          <h4 class="dash-section-title">Recent Reflections</h4>
+          <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 8px;">From your check-ins. Visible only to you.</p>
+          <div id="dash-week-reflection"></div>
+        </div>
+
+        <p style="font-size: 0.68rem; color: var(--text-muted); text-align: center; line-height: 1.5; margin-top: 8px;">
+          These insights are for personal reflection only. They do not constitute medical advice and should not be used to diagnose any condition.
+        </p>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         AI COMPANION DRAWER (new)
+    ────────────────────────────────────────────────────────────── -->
+    <div class="drawer drawer-tall" id="ai-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          Wellness Companion
+        </h2>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button id="ai-new-convo-btn" title="Start new conversation" style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); color: var(--text-muted); font-size: 0.72rem; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: inherit;">New Chat</button>
+          <button class="drawer-close" id="ai-drawer-close" aria-label="Close companion">&times;</button>
+        </div>
+      </div>
+
+      <!-- Safety banner — always visible -->
+      <div class="ai-safety-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>Emergency? <a href="tel:911"><strong>Call 911</strong></a> &nbsp;·&nbsp; Crisis support: <a href="tel:988"><strong>Call/Text 988</strong></a> &nbsp;·&nbsp; This is an AI, not a therapist.</span>
+      </div>
+
+      <!-- Config wall (shown when API key is missing) -->
+      <div id="ai-config-wall" class="feature-auth-wall" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p>The AI Companion needs a Gemini API key in <code>config.js</code> to work.</p>
+        <p style="font-size: 0.72rem; color: var(--text-muted);">Get a free key at <a href="https://aistudio.google.com" target="_blank" rel="noopener" style="color: var(--accent-color);">aistudio.google.com</a></p>
+      </div>
+
+      <!-- Chat area -->
+      <div id="ai-chat-area" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+        <!-- Messages -->
+        <div id="ai-messages" class="ai-messages-list" role="log" aria-live="polite" aria-label="Conversation messages"></div>
+
+        <!-- Loading indicator -->
+        <div id="ai-loading" class="ai-loading-indicator" style="display: none;">
+          <div class="ai-typing-dots"><span></span><span></span><span></span></div>
+          <span>SafeHarbor is thinking…</span>
+        </div>
+
+        <!-- AI attribution -->
+        <div class="ai-attribution">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Powered by Google Gemini · Educational use only · Not medical advice
+        </div>
+
+        <!-- Input row -->
+        <div class="ai-input-row">
+          <div style="position: relative; flex: 1;">
+            <textarea id="ai-input" class="ai-input-field" placeholder="Ask about substance risks, coping strategies, peer pressure…" rows="2" maxlength="1000" aria-label="Type your message"></textarea>
+            <span id="ai-char-count" class="ai-char-count">0/1000</span>
+          </div>
+          <button id="ai-send-btn" class="ai-send-btn" aria-label="Send message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         PRIVACY DRAWER (new)
+    ────────────────────────────────────────────────────────────── -->
+    <div class="drawer" id="privacy-drawer" style="display: none;">
+      <div class="drawer-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Privacy &amp; Data
+        </h2>
+        <button class="drawer-close" id="privacy-drawer-close" aria-label="Close privacy">&times;</button>
+      </div>
+      <div class="drawer-body privacy-body">
+        <h3>What We Collect</h3>
+        <p>SafeHarbor collects only what is necessary for personal wellness features:</p>
+        <ul>
+          <li><strong>Email address</strong> — required to create an account and log in.</li>
+          <li><strong>Daily check-in responses</strong> — mood, stress, optional notes. Private to your account.</li>
+          <li><strong>Journal entries</strong> — text you write. Private to your account.</li>
+          <li><strong>Personal goals</strong> — text you set. Private to your account.</li>
+          <li><strong>Learning activity</strong> — which resources you've explored (stored locally on your device).</li>
+        </ul>
+        <p>We do <strong>not</strong> collect your name, phone number, location, school, or any information not listed above.</p>
+
+        <h3>Where Data Is Stored</h3>
+        <p>Account data is stored in <strong>Supabase</strong>, a secure cloud database provider. Resource exploration and bookmarks are stored locally on your device in browser storage and are not sent to any server.</p>
+
+        <h3>AI Companion</h3>
+        <p>When you use the AI Companion, your chat messages are sent to <strong>Google Gemini</strong> to generate responses. Your journal entries and check-in responses are <strong>never automatically sent to the AI</strong> — only the messages you type into the chat are shared. Chat history is not stored in our database.</p>
+
+        <h3>Who Can See Your Data</h3>
+        <p>Only you. Row Level Security (RLS) is enabled in our database, meaning database queries are enforced server-side so that no other user — including administrators — can read your check-ins or journal entries.</p>
+
+        <h3>How to Delete Your Data</h3>
+        <p>Go to <strong>My Account → Delete My Account &amp; Data</strong>. This removes all your stored check-ins, journal entries, and goals. To complete full account deletion, contact us at <a href="mailto:privacy@safeharbor.app" style="color: var(--accent-color);">privacy@safeharbor.app</a>.</p>
+
+        <h3>Additional Notes</h3>
+        <p>SafeHarbor is an educational tool. We do not sell, share, or monetize personal data. We do not use third-party analytics. If you are a minor, please review this page with a trusted adult.</p>
+
+        <p style="color: var(--text-muted); font-size: 0.72rem; margin-top: 16px;">Last updated: October 2026</p>
+      </div>
+    </div>
+
+  </div><!-- /.drawer-backdrop -->
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       OVERLAYS
+  ════════════════════════════════════════════════════════════════ -->
+
+  <!-- Onboarding Role Selection -->
   <div id="onboarding-overlay" class="onboarding-overlay" style="display: none;">
     <div class="onboarding-card">
       <div class="brand" style="justify-content: center; margin-bottom: 16px;">
         <div class="brand-logo" style="color: var(--accent-color);">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="M8 11h8"/>
-            <path d="M12 7v8"/>
+            <path d="M8 11h8"/><path d="M12 7v8"/>
           </svg>
         </div>
         <h1 style="font-size: 1.8rem; -webkit-text-fill-color: initial; background: none; color: white;">SafeHarbor</h1>
       </div>
       <h2>Select Your Role</h2>
-      <p class="onboarding-subtitle">Choose a role to configure your default view. You can easily switch content filters at any time.</p>
-      
+      <p class="onboarding-subtitle">Choose a role to configure your default view. You can switch at any time.</p>
       <div class="role-grid">
         <div class="role-select-card" data-role="teen">
           <div class="role-icon" style="color: #6366f1; background: rgba(99, 102, 241, 0.1);">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
           </div>
           <h3>Teen</h3>
           <p>Educational facts and mental health links for teens.</p>
         </div>
-        
         <div class="role-select-card" data-role="helper/peer">
           <div class="role-icon" style="color: #14b8a6; background: rgba(20, 184, 166, 0.1);">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
           </div>
           <h3>Helper / Peer</h3>
           <p>Warning signs and response tools to support a loved one.</p>
         </div>
-        
         <div class="role-select-card" data-role="patient">
           <div class="role-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -475,12 +1072,10 @@
           <h3>Patient</h3>
           <p>Opioid treatment details and self-check questions.</p>
         </div>
-        
         <div class="role-select-card" data-role="clinician/educator">
           <div class="role-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
             </svg>
           </div>
           <h3>Professional</h3>
@@ -490,37 +1085,60 @@
     </div>
   </div>
 
-  <!-- Welcome Back Goal Check-in Modal -->
+  <!-- Goal Check-in Modal -->
   <div id="checkin-modal-overlay" class="onboarding-overlay" style="display: none; z-index: 1002;">
     <div class="onboarding-card" style="max-width: 440px; text-align: center; gap: 8px;">
       <div class="brand" style="justify-content: center; margin-bottom: 8px;">
         <div class="brand-logo" style="color: var(--accent-color);">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
+            <polyline points="20 6 9 17 4 12"/>
           </svg>
         </div>
         <h1 style="font-size: 1.5rem; -webkit-text-fill-color: initial; background: none; color: white;">Welcome Back</h1>
       </div>
       <h2>Goal Progress Check-in</h2>
       <p class="onboarding-subtitle">Did you accomplish the learning goal you set for yourself?</p>
-      
       <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); border-radius: 12px; padding: 18px; margin: 16px 0; border-left: 3px solid var(--secondary-color);">
         <p id="checkin-goal-text" style="font-size: 1.05rem; font-weight: 600; color: white; line-height: 1.4; text-align: left;"></p>
         <span id="checkin-goal-time" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 8px; text-align: left;"></span>
       </div>
-      
       <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
         <button id="checkin-yes-btn" class="visit-btn" style="background: var(--success-color); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); border: none; padding: 12px 24px; cursor: pointer; flex: 1; justify-content: center; border-radius: 8px;">Yes, Met it</button>
         <button id="checkin-no-btn" class="visit-btn" style="background: var(--emergency-color); box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25); border: none; padding: 12px 24px; cursor: pointer; flex: 1; justify-content: center; border-radius: 8px;">No, Not Met</button>
       </div>
     </div>
   </div>
-  
+
   <!-- Toasts -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- Load Scripts -->
+  <!-- ═══════════════════════════════════════════════════════════════
+       SCRIPTS — Load order matters
+  ════════════════════════════════════════════════════════════════ -->
+
+  <!-- 1. Supabase CDN (must be before supabase.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!-- 2. Credentials (gitignored — create this file locally) -->
+  <script src="config.js" onerror="console.warn('config.js not found. Create it from the template to enable personal features.')"></script>
+
+  <!-- 3. Supabase client init -->
+  <script src="supabase.js"></script>
+
+  <!-- 4. Resource data (existing) -->
   <script src="data.js"></script>
+
+  <!-- 5. Authentication (must be before other feature modules) -->
+  <script src="auth.js"></script>
+
+  <!-- 6. Core app logic (existing feed, goals, volunteer, admin) -->
   <script src="app.js"></script>
+
+  <!-- 7. Feature modules -->
+  <script src="checkin.js"></script>
+  <script src="journal.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="ai.js"></script>
+
 </body>
 </html>

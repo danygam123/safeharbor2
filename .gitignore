@@ -1,0 +1,20 @@
+# Safe Harbor — .gitignore
+
+# === SENSITIVE CREDENTIALS ===
+# config.js contains your Supabase URL, Anon Key, and Gemini API Key.
+# NEVER commit this file. Fill it in locally only.
+config.js
+
+# === DEPENDENCIES ===
+node_modules/
+
+# === OS FILES ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === EDITOR FILES ===
+.vscode/
+.idea/
+*.swp
+*.swo

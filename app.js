@@ -65,7 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const adminLoginBox = document.getElementById("admin-login-box");
   const adminDashboardBox = document.getElementById("admin-dashboard-box");
-  const adminLoginForm = document.getElementById("admin-login-form");
+  const adminLoginBtn = document.getElementById("admin-login-btn");
+  const adminEmailInput = document.getElementById("admin-email");
+  const adminPassInput = document.getElementById("admin-pass");
   const adminQueueContainer = document.getElementById("admin-queue-container");
   const adminLogoutBtn = document.getElementById("admin-logout-btn");
 
@@ -153,7 +155,57 @@ document.addEventListener("DOMContentLoaded", () => {
     renderAdminQueue();
   }
 
+  // ── Goals cloud mirror (only when signed in; localStorage stays the source of truth) ──
+  let goalsSyncTimer = null;
+  function scheduleGoalsSync() {
+    clearTimeout(goalsSyncTimer);
+    goalsSyncTimer = setTimeout(pushGoalsToCloud, 800);
+  }
+
+  async function pushGoalsToCloud() {
+    const db = window.supabaseClient;
+    const user = window.SH_Auth?.getUser();
+    if (!db || !user || state.goals.length === 0) return;
+    const rows = state.goals.map((g) => ({
+      user_id: user.id,
+      local_id: String(g.id),
+      text: g.text,
+      status: g.status,
+      created_at: new Date(g.timestamp || Date.now()).toISOString(),
+      completed_at: g.status === "active" ? null : new Date().toISOString(),
+    }));
+    const { error } = await db.from("personal_goals").upsert(rows, { onConflict: "user_id,local_id" });
+    if (error) console.warn("Goals sync failed:", error.message);
+  }
+
+  async function pullGoalsFromCloud() {
+    const db = window.supabaseClient;
+    const user = window.SH_Auth?.getUser();
+    if (!db || !user) return;
+    const { data, error } = await db.from("personal_goals").select("local_id, text, status, created_at").eq("user_id", user.id);
+    if (error || !data) return;
+    const known = new Set(state.goals.map((g) => String(g.id)));
+    let added = false;
+    data.forEach((r) => {
+      if (r.local_id && !known.has(r.local_id)) {
+        state.goals.push({ id: r.local_id, text: r.text, status: r.status, timestamp: new Date(r.created_at).getTime() });
+        added = true;
+      }
+    });
+    if (added) {
+      state.goals.sort((a, b) => b.timestamp - a.timestamp);
+      saveState();
+      renderGoalsUI();
+    }
+    pushGoalsToCloud();
+  }
+
+  window.addEventListener("safeharbor:authchange", (e) => {
+    if (e.detail && e.detail.user) pullGoalsFromCloud();
+  });
+
   function saveState() {
+    scheduleGoalsSync();
     try {
       localStorage.setItem("safeharbor_bookmarks", JSON.stringify(Array.from(state.savedResources)));
       localStorage.setItem("safeharbor_explored", JSON.stringify(Array.from(state.exploredResources)));
@@ -203,25 +255,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   }
 
-  // Drawer Controllers
+  // Drawer Controllers (generic: handles every .drawer inside the backdrop,
+  // including the auth / check-in / journal / dashboard / AI / privacy drawers)
+  function getAllDrawers() {
+    return drawerBackdrop.querySelectorAll(".drawer");
+  }
+
   function openDrawer(drawer) {
     drawerBackdrop.classList.add("active");
-    menuDrawer.style.display = "none";
-    emergencyDrawer.style.display = "none";
-    goalsDrawer.style.display = "none";
-    volunteerAdminDrawer.style.display = "none";
-    
+    getAllDrawers().forEach((d) => { d.style.display = "none"; });
     drawer.style.display = "flex";
   }
 
   function closeAllDrawers() {
     drawerBackdrop.classList.remove("active");
     setTimeout(() => {
-      menuDrawer.style.display = "none";
-      emergencyDrawer.style.display = "none";
-      goalsDrawer.style.display = "none";
-      volunteerAdminDrawer.style.display = "none";
+      // Don't hide anything if a drawer was re-opened during the close delay
+      if (drawerBackdrop.classList.contains("active")) return;
+      getAllDrawers().forEach((d) => { d.style.display = "none"; });
     }, 400);
+  }
+
+  // Exposed for auth.js and the personal-feature modules
+  window.openDrawerById = function (id) {
+    const el = document.getElementById(id);
+    if (el) openDrawer(el);
+  };
+  window.closeAllDrawers = closeAllDrawers;
+
+  // Open a personal-feature drawer, then notify its module so it can load data
+  function openFeatureDrawer(drawerId, eventName) {
+    window.openDrawerById(drawerId);
+    window.dispatchEvent(new CustomEvent(eventName));
   }
 
   // Event Listeners for Drawers
@@ -239,6 +304,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === drawerBackdrop) {
       closeAllDrawers();
     }
+  });
+
+  // Close buttons for the personal-feature drawers
+  ["auth", "checkin", "journal", "dashboard", "ai", "privacy"].forEach((name) => {
+    const btn = document.getElementById(`${name}-drawer-close`);
+    if (btn) btn.addEventListener("click", closeAllDrawers);
+  });
+
+  // Menu → personal-feature drawers
+  const featureMenu = [
+    ["menu-open-auth-btn",      () => {
+      if (!window.supabaseClient) {
+        showToast("Accounts aren't available yet. Resources and the emergency guide still work.", "info");
+        return;
+      }
+      window.openDrawerById("auth-drawer");
+    }],
+    ["menu-open-checkin-btn",   () => openFeatureDrawer("checkin-drawer",   "safeharbor:opencheckin")],
+    ["menu-open-journal-btn",   () => openFeatureDrawer("journal-drawer",   "safeharbor:openjournal")],
+    ["menu-open-dashboard-btn", () => openFeatureDrawer("dashboard-drawer", "safeharbor:opendashboard")],
+    ["menu-open-ai-btn",        () => openFeatureDrawer("ai-drawer",        "safeharbor:openai")],
+    ["menu-open-privacy-btn",   () => window.openDrawerById("privacy-drawer")],
+  ];
+  featureMenu.forEach(([id, handler]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("click", handler);
   });
 
   // Saved resources menu options
@@ -726,18 +817,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  adminLoginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const pass = document.getElementById("admin-pass").value;
-    if (pass === "admin123") {
+  // Admin sign-in: real Supabase auth + profiles.is_admin role check.
+  // Fails closed: no Supabase config, bad credentials, or missing/false
+  // is_admin all result in NO admin access.
+  async function handleAdminLogin() {
+    const db = window.supabaseClient;
+    if (!db) {
+      showToast("Admin sign-in requires Supabase to be configured.", "info");
+      return;
+    }
+    const email = adminEmailInput ? adminEmailInput.value.trim() : "";
+    const pass = adminPassInput ? adminPassInput.value : "";
+    if (!email || !pass) {
+      showToast("Enter your admin email and password.", "info");
+      return;
+    }
+
+    adminLoginBtn.disabled = true;
+    try {
+      const { data: authData, error: authErr } = await db.auth.signInWithPassword({ email, password: pass });
+      if (authErr || !authData?.user) {
+        showToast("Sign-in failed. Check your credentials.", "info");
+        return;
+      }
+      const { data: profile, error: profErr } = await db
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", authData.user.id)
+        .single();
+
+      if (profErr || !profile || profile.is_admin !== true) {
+        showToast("This account does not have admin access.", "info");
+        return;
+      }
       state.isAdmin = true;
       syncAdminDashboardUI();
       showToast("Authorized as Admin", "success");
-    } else {
-      alert("Incorrect password. Use: admin123");
+    } catch (err) {
+      console.error("Admin login error:", err);
+      showToast("Could not sign in. Please try again.", "info");
+    } finally {
+      adminLoginBtn.disabled = false;
+      if (adminPassInput) adminPassInput.value = "";
     }
-    adminLoginForm.reset();
-  });
+  }
+
+  if (adminLoginBtn) adminLoginBtn.addEventListener("click", handleAdminLogin);
 
   adminLogoutBtn.addEventListener("click", () => {
     state.isAdmin = false;
