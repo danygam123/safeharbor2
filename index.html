@@ -121,12 +121,17 @@
       <div class="hm-hero" id="hm-hero" data-daypart="day">
         <div class="hm-hero-top">
           <div>
-            <div class="hm-eyebrow" id="hm-date"></div>
+            <div class="hm-eyebrow"><span class="hm-eyebrow-mark" aria-hidden="true"></span><span id="hm-date"></span></div>
             <h2 id="hm-greeting">Hello</h2>
+            <p class="hm-hero-intro">A little support for wherever you are today.</p>
           </div>
           <div class="hm-hero-emoji" id="hm-hero-emoji" aria-hidden="true">👋</div>
         </div>
-        <p class="hm-sub" id="hm-sub">You're in a safe place. Take it one small step at a time.</p>
+        <p class="hm-sub" id="hm-sub">A private place to check in, learn, and find support—at your own pace.</p>
+        <div class="hm-hero-actions">
+          <button class="hm-start-btn" id="hm-start-btn" type="button">Start a check-in <span aria-hidden="true">→</span></button>
+          <span class="hm-private-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg> Your space, at your pace</span>
+        </div>
       </div>
 
       <div class="hm-card" id="hm-mood-card">
@@ -145,13 +150,28 @@
         <p class="hm-note" id="hm-mood-note">Tap one to start a quick, private check-in.</p>
       </div>
 
-      <div class="hm-grid" id="hm-tiles">
-        <button class="hm-tile" data-go="menu-open-journal-btn"><span class="ic ic-journal">✍️</span><span>Journal</span></button>
-        <button class="hm-tile" data-go="menu-open-ai-btn"><span class="ic ic-ai">💬</span><span>Companion</span></button>
-        <button class="hm-tile" data-go="menu-open-goals-btn"><span class="ic ic-goals">🎯</span><span>Goals</span></button>
-        <button class="hm-tile" data-go="menu-open-dashboard-btn"><span class="ic ic-progress">📈</span><span>Progress</span></button>
-        <button class="hm-tile" data-go="emergency-info-btn"><span class="ic ic-guide">🛟</span><span>Overdose guide</span></button>
-        <button class="hm-tile" data-go="menu-view-saved-btn"><span class="ic ic-saved">⭐</span><span>Saved</span></button>
+      <div class="hm-section-intro" id="hm-ways-in">
+        <span class="hm-section-kicker">WHEN YOU'RE READY</span>
+        <h3>Find your next step</h3>
+        <p>Choose what feels helpful right now. You can always come back to this space.</p>
+      </div>
+
+      <div class="hm-grid" id="hm-tiles" aria-label="Ways to get support">
+        <button class="hm-tile" data-go="menu-open-journal-btn">
+          <span class="ic ic-journal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></span>
+          <span class="hm-tile-copy"><strong>Reflect</strong><small>Make space for your thoughts</small></span>
+          <span class="hm-tile-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="hm-tile" data-go="menu-open-ai-btn">
+          <span class="ic ic-ai" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 8.7 3.9a8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8Z"/></svg></span>
+          <span class="hm-tile-copy"><strong>Talk it through</strong><small>Get a supportive place to start</small></span>
+          <span class="hm-tile-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="hm-tile" data-go="tab-learn">
+          <span class="ic ic-guide" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M9 7h7M9 11h7"/></svg></span>
+          <span class="hm-tile-copy"><strong>Learn at your pace</strong><small>Explore trusted information</small></span>
+          <span class="hm-tile-arrow" aria-hidden="true">→</span>
+        </button>
       </div>
 
       <button class="hm-breath-cta" id="hm-breath-cta">

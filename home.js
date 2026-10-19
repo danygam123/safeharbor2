@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("sos-btn")?.addEventListener("click", openEmergency);
   $("hm-help-btn")?.addEventListener("click", openEmergency);
   $("hm-see-all")?.addEventListener("click", () => { haptic(); setTab("learn"); });
+  $("hm-start-btn")?.addEventListener("click", () => { haptic(12); click("tab-checkin"); });
 
   // ─────────────────────────────────────────────────────────────
   // Greeting / hero
