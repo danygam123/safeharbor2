@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#070a13">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SafeHarbor">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>SafeHarbor — Substance Use Prevention &amp; Wellness Support</title>
   <meta name="description" content="A safe, nonjudgmental space for substance use prevention education, daily wellness check-ins, private journaling, and AI-powered support. Free resources from SAMHSA, NIDA, and 988.">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-tab="home">
 
   <div id="app-container">
 
@@ -28,6 +36,11 @@
         </div>
 
         <div class="header-actions">
+          <!-- Always-visible emergency access -->
+          <button class="sos-btn" id="sos-btn" aria-label="Emergency help: call 911 or 988">
+            <span class="sos-dot"></span>SOS
+          </button>
+
           <!-- Auth Button (new) -->
           <button class="auth-btn" id="auth-btn" aria-label="Sign in or manage account">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -36,15 +49,6 @@
             </svg>
             Sign In
           </button>
-
-          <!-- Cosmetic Tracker -->
-          <div class="progress-badge" id="progress-badge" title="Resources Explored Badge">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            <span id="progress-count">0</span> Explored
-          </div>
 
           <!-- Menu Button -->
           <button class="menu-btn" id="menu-btn" aria-label="Open Menu">
@@ -57,6 +61,19 @@
         </div>
       </div>
 
+      <div id="learn-tools">
+        <div class="learn-title-row">
+          <h2 class="learn-title">Learn</h2>
+          <!-- Explored counter -->
+          <div class="progress-badge" id="progress-badge" title="Resources Explored Badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="progress-count">0</span> Explored
+          </div>
+
+        </div>
       <!-- Search Input -->
       <div class="search-wrapper">
         <div class="search-icon">
@@ -92,7 +109,88 @@
           <button class="filter-chip" data-audience="clinician/educator">Clinician &amp; Educator</button>
         </div>
       </div>
+      </div><!-- /#learn-tools -->
     </header>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         HOME SCREEN (app landing view)
+    ══════════════════════════════════════════════════════════════ -->
+    <section id="home-view" aria-label="Home">
+
+      <div class="hm-hero" id="hm-hero" data-daypart="day">
+        <div class="hm-hero-top">
+          <div>
+            <div class="hm-eyebrow" id="hm-date"></div>
+            <h2 id="hm-greeting">Hello</h2>
+          </div>
+          <div class="hm-hero-emoji" id="hm-hero-emoji" aria-hidden="true">👋</div>
+        </div>
+        <p class="hm-sub" id="hm-sub">You're in a safe place. Take it one small step at a time.</p>
+      </div>
+
+      <div class="hm-card" id="hm-mood-card">
+        <div class="hm-card-head">
+          <h3 id="hm-mood-title">How are you feeling today?</h3>
+          <span class="hm-chip" id="hm-streak-chip" hidden></span>
+        </div>
+        <div class="hm-mood-row" id="hm-mood-row">
+          <button class="hm-mood" data-mood="1" aria-label="Very low"><span class="e">😞</span><span class="l">Very low</span></button>
+          <button class="hm-mood" data-mood="2" aria-label="Low"><span class="e">😔</span><span class="l">Low</span></button>
+          <button class="hm-mood" data-mood="3" aria-label="Okay"><span class="e">😐</span><span class="l">Okay</span></button>
+          <button class="hm-mood" data-mood="4" aria-label="Good"><span class="e">🙂</span><span class="l">Good</span></button>
+          <button class="hm-mood" data-mood="5" aria-label="Great"><span class="e">😊</span><span class="l">Great</span></button>
+        </div>
+        <div class="hm-week" id="hm-week" hidden></div>
+        <p class="hm-note" id="hm-mood-note">Tap one to start a quick, private check-in.</p>
+      </div>
+
+      <div class="hm-grid" id="hm-tiles">
+        <button class="hm-tile" data-go="menu-open-journal-btn"><span class="ic ic-journal">✍️</span><span>Journal</span></button>
+        <button class="hm-tile" data-go="menu-open-ai-btn"><span class="ic ic-ai">💬</span><span>Companion</span></button>
+        <button class="hm-tile" data-go="menu-open-goals-btn"><span class="ic ic-goals">🎯</span><span>Goals</span></button>
+        <button class="hm-tile" data-go="menu-open-dashboard-btn"><span class="ic ic-progress">📈</span><span>Progress</span></button>
+        <button class="hm-tile" data-go="emergency-info-btn"><span class="ic ic-guide">🛟</span><span>Overdose guide</span></button>
+        <button class="hm-tile" data-go="menu-view-saved-btn"><span class="ic ic-saved">⭐</span><span>Saved</span></button>
+      </div>
+
+      <button class="hm-breath-cta" id="hm-breath-cta">
+        <span class="hm-breath-orb" aria-hidden="true"></span>
+        <span class="hm-breath-text"><strong>Take a breath</strong><small>A guided 1-minute calm-down</small></span>
+        <span class="hm-breath-go" aria-hidden="true">›</span>
+      </button>
+
+      <div class="hm-card hm-fact" id="hm-fact" role="button" tabindex="0" aria-expanded="false">
+        <div class="hm-card-head"><h3>💡 Did you know?</h3><button class="hm-link" id="hm-fact-next" type="button">Another</button></div>
+        <p class="hm-fact-q" id="hm-fact-q"></p>
+        <p class="hm-fact-a" id="hm-fact-a"></p>
+        <span class="hm-hint" id="hm-fact-hint">Tap to read more</span>
+      </div>
+
+      <div class="hm-card hm-intent">
+        <div class="hm-card-head"><h3>🌱 Today's intention</h3><button class="hm-link" id="hm-intent-next" type="button">New one</button></div>
+        <p class="hm-intent-text" id="hm-intent-text"></p>
+      </div>
+
+      <div class="hm-card hm-install" id="hm-install" hidden>
+        <div class="hm-card-head"><h3>📲 Get the app</h3><button class="hm-link" id="hm-install-dismiss" type="button">Not now</button></div>
+        <p id="hm-install-text">Add SafeHarbor to your home screen for quick, full-screen access.</p>
+        <button class="hm-primary" id="hm-install-btn" type="button" hidden>Install</button>
+      </div>
+
+      <div class="hm-section-head"><h3>Keep learning</h3><button class="hm-link" id="hm-see-all" type="button">See all</button></div>
+      <div class="hm-scroller" id="hm-resources"></div>
+
+      <div class="hm-card hm-help">
+        <div>
+          <h3>Need help right now?</h3>
+          <p>Free, confidential support is available 24/7.</p>
+        </div>
+        <button class="hm-help-btn" id="hm-help-btn" type="button">Get help</button>
+      </div>
+
+      <p class="hm-footer">SafeHarbor is educational support, not a substitute for a doctor, therapist, or emergency services.</p>
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════════
          MAIN FEED
@@ -128,6 +226,33 @@
         </button>
       </div>
     </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BOTTOM TAB BAR
+    ══════════════════════════════════════════════════════════════ -->
+    <nav id="tab-bar" aria-label="Main navigation">
+      <button class="tab-btn active" id="tab-home" data-tab="home" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="tab-btn" id="tab-learn" data-tab="learn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 8h6"/></svg>
+        <span>Learn</span>
+      </button>
+      <button class="tab-btn tab-center" id="tab-checkin" aria-label="Daily check-in">
+        <span class="tab-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+        <span>Check-in</span>
+      </button>
+      <button class="tab-btn" id="tab-ai" aria-label="AI companion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Companion</span>
+      </button>
+      <button class="tab-btn" id="tab-more" aria-label="More options">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>
+        <span>More</span>
+      </button>
+    </nav>
 
   </div><!-- /#app-container -->
 
@@ -1139,6 +1264,9 @@
   <script src="journal.js"></script>
   <script src="dashboard.js"></script>
   <script src="ai.js"></script>
+
+  <!-- Home screen, tab bar, breathing exercise, confetti -->
+  <script src="home.js"></script>
 
 </body>
 </html>

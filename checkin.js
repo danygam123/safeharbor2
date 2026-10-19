@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const TOTAL_STEPS = 4;
   let todayEntry    = null;
   let editMode      = false;
+  let pendingMood   = null; // set by the Home screen's mood quick-tap
 
   const formData = {
     mood: null,
@@ -80,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("safeharbor:opencheckin", () => {
     const user = window.SH_Auth?.getUser();
     if (!user || !db) {
+      pendingMood = null;
       showAuthWall();
       return;
     }
@@ -94,6 +96,16 @@ document.addEventListener("DOMContentLoaded", () => {
       else showAuthWall();
     }
   });
+
+  // Apply a mood chosen on the Home screen, then jump to the next step
+  function applyPendingMood() {
+    if (!pendingMood) return;
+    const n = pendingMood;
+    pendingMood = null;
+    formData.mood = n;
+    moodBtns.forEach((b) => b.classList.toggle("selected", parseInt(b.dataset.value, 10) === n));
+    goToStep(2);
+  }
 
   // ── Step navigation ──────────────────────────────────────────────
   function goToStep(n) {
@@ -225,8 +237,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       todayEntry = data;
+      editMode = false;
       showSuccessState();
       loadHistory();
+      window.dispatchEvent(new CustomEvent("safeharbor:checkinsaved", { detail: { entry: data } }));
       if (window.showToast) window.showToast("Check-in saved! Great job showing up.", "success");
     });
   }
@@ -345,10 +359,12 @@ document.addEventListener("DOMContentLoaded", () => {
     todayEntry = data;
 
     if (todayEntry && !editMode) {
+      pendingMood = null;
       showSuccessState();
     } else {
       resetForm();
       showFormState();
+      applyPendingMood();
     }
 
     loadHistory();
@@ -385,5 +401,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Expose for external triggers (e.g., dashboard)
-  window.SH_Checkin = { reload: loadCheckin };
+  window.SH_Checkin = { reload: loadCheckin, preselectMood: (n) => { pendingMood = n; } };
 });
