@@ -59,7 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function getWelcomeMessage() {
-    return `Hi, I'm SafeHarbor's educational wellness companion 👋
+    const buddyName = window.SH_CompanionBuddy?.()?.name || "Harbor";
+    return `Hi, I'm ${buddyName}, your SafeHarbor AI companion 👋
 
 I'm here to help you learn about substance use prevention, explore healthy coping strategies, or just have a supportive conversation.
 
@@ -113,7 +114,10 @@ What's on your mind today?`;
       const res = await fetch(CHAT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: conversationHistory }),
+        body: JSON.stringify({
+          contents: conversationHistory,
+          companion: window.SH_CompanionBuddy?.()?.name || "Harbor",
+        }),
       });
 
       if (!res.ok) {
@@ -154,6 +158,17 @@ What's on your mind today?`;
 
     const wrapper = document.createElement("div");
     wrapper.className = `ai-msg-row ${role}`;
+
+    if (role === "model") {
+      const buddy = window.SH_CompanionBuddy?.();
+      if (buddy?.icon) {
+        const avatar = document.createElement("span");
+        avatar.className = "ai-msg-avatar";
+        avatar.setAttribute("aria-hidden", "true");
+        avatar.textContent = buddy.icon;
+        wrapper.appendChild(avatar);
+      }
+    }
 
     const bubble = document.createElement("div");
     bubble.className = `ai-msg-bubble ${role}`;
