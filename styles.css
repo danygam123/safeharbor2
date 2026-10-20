@@ -3373,3 +3373,74 @@ body[data-tab="home"] .hm-intent-text { max-width: 48ch; color: #41675d; font-si
 @media (prefers-reduced-motion: reduce) {
   .sh-primary-btn, .more-feature, .practice-progress-track span { transition: none; }
 }
+
+/* Companion chat uses the shared light palette so every message is readable. */
+#ai-drawer {
+  color: #203c36;
+  background: #f7faf8;
+  border: 1px solid #dfe9e4;
+  box-shadow: 0 -20px 48px rgba(34, 69, 58, .16);
+}
+#ai-drawer .drawer-header {
+  border-bottom-color: #dfe9e4;
+}
+#ai-drawer .drawer-header h2 {
+  color: #203c36;
+}
+#ai-drawer .ai-safety-banner {
+  background: #fff0ee;
+  border: 1px solid #f0d4d0;
+  border-radius: 10px;
+  color: #76383b;
+}
+#ai-drawer .ai-safety-banner svg,
+#ai-drawer .ai-safety-banner a {
+  color: #a63843;
+}
+#ai-drawer .ai-messages-list {
+  background: #f7faf8;
+}
+#ai-drawer .ai-msg-bubble.model {
+  background: #fff;
+  border-color: #dfe9e4;
+  color: #294a41;
+  box-shadow: 0 3px 12px rgba(34, 69, 58, .05);
+}
+#ai-drawer .ai-msg-bubble.model strong {
+  color: #203c36;
+}
+#ai-drawer .ai-msg-bubble.model em {
+  color: #607770;
+}
+#ai-drawer .ai-msg-bubble.model code {
+  background: #edf3f0;
+  color: #294a41;
+}
+#ai-drawer .ai-msg-bubble.model a {
+  color: #17685e;
+}
+#ai-drawer .ai-msg-bubble.user {
+  background: #426f8b;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(52, 95, 120, .2);
+}
+#ai-drawer .ai-attribution {
+  background: #f7faf8;
+  border-color: #dfe9e4;
+  color: #607770;
+}
+#ai-drawer .ai-input-row {
+  background: #f7faf8;
+  border-color: #dfe9e4;
+}
+#ai-drawer .ai-input-field {
+  background: #fff;
+  border-color: #cfded7;
+  color: #203c36;
+}
+#ai-drawer .ai-input-field::placeholder {
+  color: #748982;
+}
+#ai-drawer .ai-char-count {
+  color: #607770;
+}
