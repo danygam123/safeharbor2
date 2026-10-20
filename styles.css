@@ -3444,3 +3444,275 @@ body[data-tab="home"] .hm-intent-text { max-width: 48ch; color: #41675d; font-si
 #ai-drawer .ai-char-count {
   color: #607770;
 }
+
+
+/* Feature drawers behave like full in-app pages instead of small popups. */
+.drawer-backdrop {
+  background: #edf3f0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.drawer-backdrop.active {
+  background: #edf3f0;
+}
+.drawer {
+  position: fixed;
+  inset: 0;
+  bottom: auto;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  padding: calc(24px + env(safe-area-inset-top)) max(18px, calc((100vw - 920px) / 2)) calc(28px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 0;
+  background: #f7faf8;
+  color: #203c36;
+  box-shadow: none;
+  transform: translateX(18px);
+  opacity: 0;
+  transition: transform .26s cubic-bezier(.2,.75,.25,1), opacity .18s ease;
+  align-items: stretch;
+}
+.drawer-backdrop.active .drawer {
+  transform: translateX(0);
+  opacity: 1;
+}
+.drawer-header {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto 24px;
+  padding-bottom: 16px;
+  border-bottom-color: #dfe9e4;
+}
+.drawer-header h2 {
+  color: #203c36;
+}
+.drawer-close {
+  width: auto;
+  min-width: 82px;
+  height: 40px;
+  padding: 0 14px;
+  gap: 7px;
+  border: 1px solid #dfe9e4;
+  border-radius: 999px;
+  background: #fff;
+  color: #355c52;
+  font-family: inherit;
+  font-size: .78rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.drawer-close:hover {
+  background: #edf5f1;
+  border-color: #c9ddd4;
+  color: #1d655c;
+}
+.drawer > :not(.drawer-header) {
+  width: 100%;
+  max-width: 920px;
+  margin-right: auto;
+  margin-left: auto;
+}
+#drawer-backdrop.active .drawer {
+  background: #f7faf8;
+  color: #203c36;
+}
+#drawer-backdrop.active .drawer :is(h1,h2,h3,h4,h5,p,label,li,.checkin-q,.dash-stat-value,.dash-chart-title,.dash-section-title,.dash-goal-text span:first-child,.jec-title,.goal-history-text,.checkin-summary-row span:last-child) {
+  color: #203c36 !important;
+}
+#drawer-backdrop.active .drawer .about-section,
+#drawer-backdrop.active .drawer .about-section p,
+#drawer-backdrop.active .drawer .emergency-step-mini-item,
+#drawer-backdrop.active .drawer .checkin-hint,
+#drawer-backdrop.active .drawer .checkin-optional-label,
+#drawer-backdrop.active .drawer .feature-auth-wall,
+#drawer-backdrop.active .drawer .privacy-body p,
+#drawer-backdrop.active .drawer .privacy-body li,
+#drawer-backdrop.active .drawer .jec-preview,
+#drawer-backdrop.active .drawer .dash-coping-item,
+#drawer-backdrop.active .drawer .dash-reflection-snippet span {
+  color: #607770 !important;
+}
+#drawer-backdrop.active .drawer [style*="color: white"],
+#drawer-backdrop.active .drawer [style*="color:white"],
+#drawer-backdrop.active .drawer [style*="color: #fff"] {
+  color: #203c36 !important;
+}
+#drawer-backdrop.active .drawer :is(input,textarea,select,.form-input,.checkin-textarea,.journal-title-input,.journal-editor-textarea) {
+  border-color: #cfded7 !important;
+  background: #fff !important;
+  color: #203c36 !important;
+}
+#drawer-backdrop.active .drawer :is(input,textarea,select)::placeholder {
+  color: #748982 !important;
+  opacity: 1;
+}
+#drawer-backdrop.active .drawer select option {
+  background: #fff;
+  color: #203c36;
+}
+#drawer-backdrop.active .drawer :is(.menu-link-item,.emergency-instruction-card,.checkin-summary-card,.checkin-history-item,.journal-entry-card,.journal-empty-state,.dash-stat-card,.dash-chart-card,.dash-goal-item,.dash-reflection-snippet,.dash-recent-item,.goal-history-item,.feature-auth-wall) {
+  border-color: #dfe9e4;
+  background-color: #fff;
+  color: #203c36;
+  box-shadow: 0 8px 22px rgba(34,69,58,.045);
+}
+#drawer-backdrop.active .drawer .menu-link-item:hover,
+#drawer-backdrop.active .drawer .journal-entry-card:hover {
+  border-color: #c9ddd4;
+  background-color: #f0f6f2;
+}
+#drawer-backdrop.active .drawer .disclaimer-box {
+  border-color: #ead9a7;
+  background: #fff7df;
+  color: #684e21;
+}
+#drawer-backdrop.active .drawer .disclaimer-box :is(strong,div) {
+  color: #684e21 !important;
+}
+#drawer-backdrop.active .drawer .emergency-instruction-card h3,
+#drawer-backdrop.active .drawer .privacy-body h3 {
+  color: #24473e !important;
+}
+#drawer-backdrop.active .drawer :is(.mood-btn,.stress-btn,.support-btn,.difficult-btn,.checkin-nav-btn.secondary,.checkin-skip-btn,.filter-chip) {
+  border-color: #d6e4dd;
+  background: #fff;
+  color: #526d64;
+}
+#drawer-backdrop.active .drawer :is(.mood-btn,.stress-btn,.support-btn,.difficult-btn,.filter-chip):hover {
+  border-color: #b8d2c7;
+  background: #f0f6f2;
+}
+#drawer-backdrop.active .drawer :is(.mood-btn.selected,.stress-btn.selected,.support-btn.selected,.difficult-btn.selected,.filter-chip.active) {
+  border-color: #77ad9b;
+  background: #e8f3ed;
+  color: #1d655c;
+}
+#drawer-backdrop.active .drawer .stress-btn span {
+  color: #607770;
+}
+#drawer-backdrop.active .drawer .auth-message.error {
+  border-color: #efd2ce;
+  background: #fff0ee;
+  color: #963c42;
+}
+#drawer-backdrop.active .drawer .auth-message.success {
+  border-color: #cbe6d7;
+  background: #edf7f0;
+  color: #286b4c;
+}
+#drawer-backdrop.active .drawer :is(.dash-stat-label,.dash-chart-legend,.dash-goal-status,.goal-history-date,.jec-date,.empty-list-text,.journal-month-label,.journal-editor-status.info) {
+  color: #607770;
+}
+#drawer-backdrop.active .drawer :is(.dri-badge.mood,.chi-badge.mood) {
+  border-color: #d9def1;
+  background: #eef0fa;
+  color: #515d88;
+}
+#drawer-backdrop.active .drawer :is(.dri-badge.stress,.chi-badge.stress) {
+  border-color: #eadbbd;
+  background: #fff5df;
+  color: #765927;
+}
+#drawer-backdrop.active .drawer .goal-status-badge.active {
+  border-color: #d9def1;
+  background: #eef0fa;
+  color: #515d88;
+}
+#ai-drawer #ai-chat-area {
+  min-height: 0;
+  flex: 1 1 auto;
+}
+#ai-drawer .ai-messages-list {
+  min-height: 0;
+}
+#ai-drawer .ai-input-row {
+  border-color: #dfe9e4;
+}
+
+/* The breathing exercise uses the same calm, legible surface as the rest of the app. */
+.breath-overlay {
+  background: radial-gradient(circle at 50% 38%, #e6f2ed 0%, #f7faf8 72%);
+  color: #203c36;
+}
+.breath-close {
+  border-color: #dfe9e4;
+  background: #fff;
+  color: #355c52;
+}
+.breath-mode {
+  border-color: #d6e4dd;
+  background: #fff;
+  color: #526d64;
+}
+.breath-mode.active {
+  border-color: #77ad9b;
+  background: #e8f3ed;
+  color: #1d655c;
+}
+.breath-phase { color: #203c36; }
+.breath-sub { color: #607770; }
+
+/* Role selection is an onboarding screen; only its goal confirmation stays compact. */
+#onboarding-overlay {
+  min-height: 100dvh;
+  overflow-y: auto;
+  background: #edf3f0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+#onboarding-overlay .onboarding-card {
+  max-width: 760px;
+  border: 0;
+  border-radius: 22px;
+  background: #f7faf8;
+  box-shadow: 0 16px 44px rgba(34,69,58,.08);
+}
+#onboarding-overlay .onboarding-card h1 { color: #183c39 !important; }
+#onboarding-overlay .onboarding-card h2,
+#onboarding-overlay .onboarding-card h3 { color: #203c36 !important; }
+#onboarding-overlay .role-select-card {
+  border-color: #dfe9e4;
+  background: #fff;
+}
+#onboarding-overlay .role-select-card p { color: #607770 !important; }
+#checkin-modal-overlay {
+  background: rgba(32,60,54,.28);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+#checkin-modal-overlay .onboarding-card {
+  border-color: #dfe9e4;
+  background: #f7faf8;
+  box-shadow: 0 18px 48px rgba(34,69,58,.18);
+}
+#checkin-modal-overlay .onboarding-card :is(h1,h2,h3,p) { color: #203c36 !important; }
+#checkin-modal-overlay .onboarding-card .onboarding-subtitle { color: #607770 !important; }
+#checkin-modal-overlay .onboarding-card [style*="color: white"] { color: #203c36 !important; }
+#checkin-modal-overlay .onboarding-card [style*="background: rgba(255,255,255,0.03)"] {
+  border-color: #dfe9e4 !important;
+  background: #fff !important;
+}
+.toast {
+  border-color: #dfe9e4;
+  background: rgba(255,255,255,.97);
+  color: #203c36;
+  box-shadow: 0 10px 28px rgba(34,69,58,.12);
+}
+.toast.success { color: #286b4c; }
+.toast.info { color: #355c52; }
+@media (max-width: 700px) {
+  .drawer {
+    padding: calc(18px + env(safe-area-inset-top)) 17px calc(22px + env(safe-area-inset-bottom));
+  }
+  .drawer-header { margin-bottom: 18px; }
+  #ai-drawer #ai-chat-area { min-height: 55dvh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer { transition: none; }
+}

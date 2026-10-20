@@ -348,7 +348,7 @@
   <!-- ═══════════════════════════════════════════════════════════════
        DRAWERS OVERLAY / BACKDROP
   ════════════════════════════════════════════════════════════════ -->
-  <div class="drawer-backdrop" id="drawer-backdrop">
+  <div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true">
 
     <!-- ─────────────────────────────────────────────────────────────
          MENU / ABOUT DRAWER (existing)
@@ -363,7 +363,7 @@
           </svg>
           About SafeHarbor
         </h2>
-        <button class="drawer-close" id="menu-drawer-close" aria-label="Close menu">&times;</button>
+        <button class="drawer-close" id="menu-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="about-section">
@@ -489,7 +489,7 @@
           </svg>
           Emergency Contacts
         </h2>
-        <button class="drawer-close" id="emergency-drawer-close" aria-label="Close emergency menu">&times;</button>
+        <button class="drawer-close" id="emergency-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="emergency-drawer-body">
@@ -549,7 +549,7 @@
           </svg>
           Goals &amp; Analytics
         </h2>
-        <button class="drawer-close" id="goals-drawer-close" aria-label="Close goals menu">&times;</button>
+        <button class="drawer-close" id="goals-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="drawer-body" style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 20px;">
@@ -606,7 +606,7 @@
           </svg>
           Volunteer &amp; Admin
         </h2>
-        <button class="drawer-close" id="volunteer-admin-drawer-close" aria-label="Close portal menu">&times;</button>
+        <button class="drawer-close" id="volunteer-admin-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px;">
@@ -697,7 +697,7 @@
           </svg>
           My Account
         </h2>
-        <button class="drawer-close" id="auth-drawer-close" aria-label="Close account drawer">&times;</button>
+        <button class="drawer-close" id="auth-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="drawer-body" style="display: flex; flex-direction: column; gap: 16px; padding-bottom: 24px;">
@@ -803,7 +803,7 @@
           </svg>
           Daily Check-in
         </h2>
-        <button class="drawer-close" id="checkin-drawer-close" aria-label="Close check-in">&times;</button>
+        <button class="drawer-close" id="checkin-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <!-- Auth wall -->
@@ -957,7 +957,7 @@
           </svg>
           My Journal
         </h2>
-        <button class="drawer-close" id="journal-drawer-close" aria-label="Close journal">&times;</button>
+        <button class="drawer-close" id="journal-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <!-- Auth wall -->
@@ -1031,7 +1031,7 @@
           </svg>
           My Progress
         </h2>
-        <button class="drawer-close" id="dashboard-drawer-close" aria-label="Close progress">&times;</button>
+        <button class="drawer-close" id="dashboard-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <!-- Auth wall -->
@@ -1138,7 +1138,7 @@
         </h2>
         <div style="display: flex; gap: 8px; align-items: center;">
           <button id="ai-new-convo-btn" title="Start new conversation" style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); color: var(--text-muted); font-size: 0.72rem; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: inherit;">New Chat</button>
-          <button class="drawer-close" id="ai-drawer-close" aria-label="Close companion">&times;</button>
+          <button class="drawer-close" id="ai-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
         </div>
       </div>
 
@@ -1205,7 +1205,7 @@
           </svg>
           Privacy &amp; Data
         </h2>
-        <button class="drawer-close" id="privacy-drawer-close" aria-label="Close privacy">&times;</button>
+        <button class="drawer-close" id="privacy-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
       <div class="drawer-body privacy-body">
         <h3>What We Collect</h3>
