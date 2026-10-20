@@ -27,13 +27,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // ─────────────────────────────────────────────────────────────
   // Tabs
   // ─────────────────────────────────────────────────────────────
-  const viewTabs = ["home", "learn"];
+  const viewTabs = ["home", "learn", "companion", "more", "practice"];
 
   function setTab(name) {
     if (!viewTabs.includes(name)) return;
+    if (name !== "practice" && practiceTimer) { clearInterval(practiceTimer); practiceTimer = null; }
     document.body.dataset.tab = name;
+    const companionPage = $("companion-view");
+    const morePage = $("more-view");
+    const practicePage = $("practice-view");
+    if (companionPage) companionPage.hidden = name !== "companion";
+    if (morePage) morePage.hidden = name !== "more";
+    if (practicePage) practicePage.hidden = name !== "practice";
     document.querySelectorAll("#tab-bar .tab-btn[data-tab]").forEach((b) => {
-      const on = b.dataset.tab === name;
+      const on = b.dataset.tab === name || (name === "practice" && b.dataset.tab === "learn");
       b.classList.toggle("active", on);
       if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
@@ -44,9 +51,128 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("tab-home")?.addEventListener("click", () => { haptic(); setTab("home"); });
   $("tab-learn")?.addEventListener("click", () => { haptic(); setTab("learn"); });
+  $("tab-ai")?.addEventListener("click", () => { haptic(); setTab("companion"); });
+  $("tab-more")?.addEventListener("click", () => { haptic(); setTab("more"); });
   $("tab-checkin")?.addEventListener("click", () => { haptic(12); click("menu-open-checkin-btn"); });
-  $("tab-ai")?.addEventListener("click", () => { haptic(); click("menu-open-ai-btn"); });
-  $("tab-more")?.addEventListener("click", () => { haptic(); click("menu-btn"); });
+
+  // Companion and More are first-class destinations; their actions reuse existing app tools.
+  let pendingCompanionPrompt = "";
+  const buddyStorageKey = "safeharbor-companion-buddy";
+  const buddyButtons = Array.from(document.querySelectorAll(".buddy-option"));
+  const companionAvatar = $("companion-avatar-preview");
+  const companionName = $("companion-name");
+  const aiBuddyAvatar = $("ai-buddy-avatar");
+  const aiBuddyName = $("ai-buddy-name");
+  let buddy = { icon: "🦦", name: "Harbor" };
+  try {
+    const saved = JSON.parse(localStorage.getItem(buddyStorageKey) || "null");
+    if (saved && typeof saved.icon === "string" && typeof saved.name === "string") buddy = saved;
+  } catch (_) { /* storage may be unavailable */ }
+  function selectBuddy(button) {
+    if (!button) return;
+    buddy = { icon: button.dataset.icon || "🦦", name: button.dataset.name || "Harbor" };
+    buddyButtons.forEach((option) => {
+      const selected = option === button;
+      option.classList.toggle("selected", selected);
+      option.setAttribute("aria-pressed", String(selected));
+    });
+    if (companionAvatar) companionAvatar.textContent = buddy.icon;
+    if (companionName) companionName.textContent = buddy.name;
+    if (aiBuddyAvatar) aiBuddyAvatar.textContent = buddy.icon;
+    if (aiBuddyName) aiBuddyName.textContent = buddy.name;
+    try { localStorage.setItem(buddyStorageKey, JSON.stringify(buddy)); } catch (_) { /* keep choice for this visit */ }
+  }
+  const savedBuddy = buddyButtons.find((button) => button.dataset.icon === buddy.icon && button.dataset.name === buddy.name);
+  selectBuddy(savedBuddy || buddyButtons[0]);
+  window.SH_CompanionBuddy = () => buddy;
+  buddyButtons.forEach((button) => button.addEventListener("click", () => selectBuddy(button)));
+
+  function openCompanionChat(prompt = "") {
+    pendingCompanionPrompt = prompt;
+    click("menu-open-ai-btn");
+    if (prompt) window.setTimeout(() => {
+      const input = $("ai-input");
+      if (input) { input.value = prompt; input.dispatchEvent(new Event("input", { bubbles: true })); input.focus(); }
+    }, 180);
+  }
+  $("companion-chat-start")?.addEventListener("click", () => openCompanionChat());
+  document.querySelectorAll("[data-companion-prompt]").forEach((button) => button.addEventListener("click", () => openCompanionChat(button.dataset.companionPrompt || "")));
+  document.querySelectorAll("[data-open]").forEach((button) => button.addEventListener("click", () => click(button.dataset.open)));
+  document.querySelectorAll("[data-open-tab]").forEach((button) => button.addEventListener("click", () => setTab(button.dataset.openTab || "practice")));
+
+  // Guided self-help exercises stay on-device; entries are not saved or sent.
+  const practicePanel = $("practice-panel");
+  let practiceKind = "urge";
+  let practiceStep = 0;
+  let practiceTimer = null;
+  const practiceData = {
+    urge: [
+      ["Pause and notice", "An urge can feel intense, and it can also change. If it feels okay, pause for a moment. Where do you notice it in your body?", "I’ve noticed where I feel it"],
+      ["Describe the wave", "Notice the sensations with curiosity: warm or cool, tight or loose, still or moving? There’s no need to make it go away.", "I’ve observed the sensation"],
+      ["Stay with one breath", "Let your breath arrive naturally. Watch how the feeling shifts from one moment to the next. You can stop this exercise whenever you want.", "Start a 60-second pause"],
+      ["Choose a kind next step", "What might help you feel safer or more supported in the next few minutes? You could move to a different space, contact someone you trust, or talk with your companion.", "Finish this practice"],
+    ],
+    ground: [
+      ["Look around", "Gently name five things you can see. Take your time. You can type them here or simply notice them to yourself.", "Continue"],
+      ["Notice touch and sound", "Name four things you can feel against your body, then three sounds you can hear. What is steady or familiar nearby?", "Continue"],
+      ["Notice scent and taste", "Name two things you can smell and one thing you can taste. If you can’t notice one, that’s okay—move on.", "Continue"],
+      ["Come back to the room", "Take one comfortable breath. Look around and notice that you are here, in this moment. What would feel supportive now?", "Finish this practice"],
+    ],
+    reframe: [
+      ["Name the thought", "What’s the thought that is weighing on you right now? Write it down as it showed up, without judging yourself.", "Next: look at the facts"],
+      ["Make room for another view", "What facts support this thought? Is there anything you might be leaving out, or what would you say to someone you care about in the same situation?", "Next: choose a balanced thought"],
+      ["Try a kinder, balanced thought", "Can you write a thought that feels both honest and a little more compassionate? It does not have to be positive—just fair to you.", "Finish this reflection"],
+    ],
+  };
+  function renderPractice(kind = practiceKind) {
+    practiceKind = kind;
+    const data = practiceData[kind] || practiceData.urge;
+    if (practicePanel) {
+      if (practiceStep >= data.length) {
+        practicePanel.innerHTML = `<div class="practice-complete"><span aria-hidden="true">🌱</span><span class="sh-eyebrow">YOU SHOWED UP</span><h3>That was a meaningful pause.</h3><p>You can carry one small next step with you, or choose another tool whenever you’re ready.</p><button type="button" class="sh-secondary-btn" data-practice-reset="${esc(kind)}">Try another exercise</button></div>`;
+      } else {
+        const [title, copy, action] = data[practiceStep];
+        const extra = kind === "ground" ? `<label class="practice-input-label" for="ground-note">What are you noticing? <span>Optional — stays on this device</span></label><textarea id="ground-note" class="practice-textarea" rows="2" placeholder="Type a few words, or skip this…"></textarea>` : kind === "reframe" ? `<label class="practice-input-label" for="reframe-note">${practiceStep === 0 ? "Write the thought here (optional)" : practiceStep === 1 ? "What else could be true? (optional)" : "A fairer thought (optional)"}<span>Stays on this device</span></label><textarea id="reframe-note" class="practice-textarea" rows="3" placeholder="Take your time…"></textarea>` : `<div class="urge-meter-wrap"><label for="urge-meter" class="practice-input-label">How strong does the urge feel right now? <span id="urge-meter-value">5 / 10</span></label><input type="range" min="0" max="10" value="5" id="urge-meter" class="urge-meter"></div>${practiceStep === 2 ? `<div class="urge-timer"><span id="urge-timer-count">60</span><small>seconds · optional pause</small></div>` : ""}`;
+        practicePanel.innerHTML = `<div class="practice-progress"><span>STEP ${practiceStep + 1} OF ${data.length}</span><span>${kind === "urge" ? "URGE SURFING" : kind === "ground" ? "5-SENSES GROUNDING" : "THOUGHT CHECK"}</span></div><div class="practice-progress-track"><span style="width:${Math.round(((practiceStep + 1) / data.length) * 100)}%"></span></div><span class="practice-illustration" aria-hidden="true">${kind === "urge" ? "🌊" : kind === "ground" ? "🌿" : "💭"}</span><h3>${esc(title)}</h3><p class="practice-guidance">${esc(copy)}</p>${extra}<div class="practice-actions"><button type="button" class="sh-secondary-btn" data-practice-back="${esc(kind)}" ${practiceStep === 0 ? "disabled" : ""}>Back</button><button type="button" class="sh-primary-btn" data-practice-next="${esc(kind)}">${esc(action)}</button></div><p class="practice-optional">There’s no perfect way to do this. Skip or stop whenever you like.</p>`;
+      }
+    }
+    document.querySelectorAll(".practice-choice").forEach((button) => {
+      const selected = button.dataset.practice === kind;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+  }
+  document.querySelectorAll(".practice-choice").forEach((button) => button.addEventListener("click", () => { if (practiceTimer) { clearInterval(practiceTimer); practiceTimer = null; } practiceStep = 0; renderPractice(button.dataset.practice); }));
+  practicePanel?.addEventListener("input", (event) => {
+    if (event.target.id === "urge-meter") { const value = $("urge-meter-value"); if (value) value.textContent = `${event.target.value} / 10`; }
+  });
+  practicePanel?.addEventListener("click", (event) => {
+    const next = event.target.closest("[data-practice-next]");
+    const back = event.target.closest("[data-practice-back]");
+    const reset = event.target.closest("[data-practice-reset]");
+    if (!next && !back && !reset) return;
+    if (practiceTimer) { clearInterval(practiceTimer); practiceTimer = null; }
+    if (reset) { practiceStep = 0; renderPractice(reset.dataset.practiceReset); return; }
+    if (back) practiceStep = Math.max(0, practiceStep - 1);
+    else if (next) {
+      if (practiceKind === "urge" && practiceStep === 2 && !next.dataset.timerDone) {
+        let remaining = 60;
+        next.dataset.timerDone = "true";
+        next.disabled = true;
+        const display = $("urge-timer-count");
+        next.textContent = "Take your time…";
+        practiceTimer = window.setInterval(() => {
+          remaining -= 1;
+          if (display) display.textContent = String(remaining);
+          if (remaining <= 0) { clearInterval(practiceTimer); practiceTimer = null; next.disabled = false; next.textContent = "Continue"; }
+        }, 1000);
+        return;
+      }
+      practiceStep += 1;
+    }
+    renderPractice();
+  });
+  renderPractice();
 
   // Anything that filters/shows the resource feed should land on the Learn tab
   $("menu-view-saved-btn")?.addEventListener("click", () => setTab("learn"));

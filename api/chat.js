@@ -52,6 +52,8 @@ RESPONSE STYLE:
 - End responses with an open question or next step when appropriate.
 - Keep responses appropriately brief — this is a mobile-friendly chat interface.`;
 
+const COMPANION_NAMES = new Set(["Harbor", "Shelly", "Ember", "Sunny", "Sage"]);
+
 const MAX_TURNS = 40;       // messages kept per request
 const MAX_CHARS = 1000;     // per message
 const RATE_LIMIT = 20;      // requests per IP per window (best-effort; resets on cold start)
@@ -110,11 +112,17 @@ module.exports = async function handler(req, res) {
   const contents = cleanContents(req.body && req.body.contents);
   if (!contents) return res.status(400).json({ error: "Invalid request." });
 
+  // Only accept the app's fixed buddy names. A selected buddy changes the friendly
+  // presentation, never the safety or educational boundaries above.
+  const requestedCompanion = req.body && req.body.companion;
+  const companionName = COMPANION_NAMES.has(requestedCompanion) ? requestedCompanion : "Harbor";
+  const systemInstruction = `${SYSTEM_INSTRUCTION}\n\nCOMPANION PRESENTATION:\n- The user's selected friendly companion is ${companionName}. You may introduce yourself by this name and use a warm, approachable voice.\n- This name and icon are a visual personalization only. You are still an AI, not a person, animal, therapist, or medical professional. Be transparent if asked.\n- These presentation preferences never override the safety protocol or hard rules above.`;
+
   const model = process.env.GEMINI_MODEL || "gemini-3.8-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
 
   const body = {
-    system_instruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+    system_instruction: { parts: [{ text: systemInstruction }] },
     contents,
     generationConfig: {
       temperature: 0.7,

@@ -179,6 +179,7 @@
         <span class="hm-breath-text"><strong>Take a breath</strong><small>A guided 1-minute calm-down</small></span>
         <span class="hm-breath-go" aria-hidden="true">›</span>
       </button>
+      <button class="hm-practice-cta" type="button" data-open-tab="practice"><span aria-hidden="true">🌊</span><span><strong>Try a guided exercise</strong><small>Grounding, urge surfing, or a gentle thought check</small></span><b aria-hidden="true">→</b></button>
 
       <div class="hm-card hm-fact" id="hm-fact" role="button" tabindex="0" aria-expanded="false">
         <div class="hm-card-head"><h3>💡 Did you know?</h3><button class="hm-link" id="hm-fact-next" type="button">Another</button></div>
@@ -212,12 +213,80 @@
       <p class="hm-footer">SafeHarbor is educational support, not a substitute for a doctor, therapist, or emergency services.</p>
     </section>
 
+    <section id="learn-hub" class="learn-hub" aria-label="Learn and practice">
+      <div class="learn-hub-intro"><span class="sh-eyebrow">LEARN &amp; PRACTICE</span><h2>Knowledge and support, at your pace.</h2><p>Explore trusted information or try a small exercise for the moment you’re in.</p></div>
+      <button class="learn-practice-card" type="button" data-open-tab="practice"><span class="practice-spark" aria-hidden="true">🌊</span><span><strong>Need something for right now?</strong><small>Try grounding, ride an urge, or untangle a thought</small></span><b aria-hidden="true">Explore tools&nbsp; →</b></button>
+      <div class="learn-resource-title"><div><span class="sh-eyebrow">TRUSTED RESOURCES</span><h3>Explore what matters to you</h3></div><span class="sh-muted">From SAMHSA, NIDA, CDC &amp; more</span></div>
+    </section>
+
     <!-- ═══════════════════════════════════════════════════════════
          MAIN FEED
     ══════════════════════════════════════════════════════════════ -->
     <main id="feed-container">
       <!-- Dynamic feed items injected by app.js -->
     </main>
+
+    <section id="companion-view" class="sh-page" aria-label="Companion" hidden>
+      <div class="sh-page-heading">
+        <span class="sh-eyebrow">A SUPPORTIVE SPACE</span>
+        <h2>Meet your companion</h2>
+        <p>Choose a little buddy to keep you company. You can talk about what’s on your mind, explore coping ideas, or just take things one step at a time.</p>
+      </div>
+      <div class="companion-stage">
+        <div class="companion-stage-copy">
+          <span class="sh-eyebrow">YOUR COMPANION</span>
+          <h3 id="companion-name">Harbor</h3>
+          <p>A gentle, judgment-free place to begin.</p>
+          <button class="sh-primary-btn" id="companion-chat-start" type="button">Start a conversation <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="companion-avatar" id="companion-avatar-preview" aria-hidden="true">🦦</div>
+      </div>
+      <div class="sh-section-title"><div><span class="sh-eyebrow">MAKE IT YOURS</span><h3>Choose your buddy</h3></div><span class="sh-muted">You can change this anytime</span></div>
+      <div class="buddy-picker" role="group" aria-label="Choose your companion icon">
+        <button class="buddy-option selected" type="button" data-buddy="otter" data-icon="🦦" data-name="Harbor" aria-pressed="true"><span>🦦</span><strong>Harbor</strong></button>
+        <button class="buddy-option" type="button" data-buddy="turtle" data-icon="🐢" data-name="Shelly" aria-pressed="false"><span>🐢</span><strong>Shelly</strong></button>
+        <button class="buddy-option" type="button" data-buddy="fox" data-icon="🦊" data-name="Ember" aria-pressed="false"><span>🦊</span><strong>Ember</strong></button>
+        <button class="buddy-option" type="button" data-buddy="bear" data-icon="🐻" data-name="Sunny" aria-pressed="false"><span>🐻</span><strong>Sunny</strong></button>
+        <button class="buddy-option" type="button" data-buddy="owl" data-icon="🦉" data-name="Sage" aria-pressed="false"><span>🦉</span><strong>Sage</strong></button>
+      </div>
+      <div class="companion-prompts"><h3>Not sure what to say?</h3>
+        <button type="button" data-companion-prompt="I'm having a hard moment and could use some support." class="prompt-chip">“I’m having a hard moment”</button>
+        <button type="button" data-companion-prompt="Can you guide me through a grounding exercise?" class="prompt-chip">“Help me feel grounded”</button>
+        <button type="button" data-companion-prompt="I want to understand what I’m feeling without judging myself." class="prompt-chip">“Help me sort through a feeling”</button>
+      </div>
+      <p class="sh-footnote">Your companion is AI support for education and reflection, not a therapist or medical professional. You choose what you share.</p>
+    </section>
+
+    <section id="more-view" class="sh-page" aria-label="More tools and settings" hidden>
+      <div class="sh-page-heading">
+        <span class="sh-eyebrow">YOUR SAFEHARBOR</span>
+        <h2>More ways to find support</h2>
+        <p>Pick up where you left off, explore your personal tools, or get help now.</p>
+      </div>
+      <div class="more-feature-grid">
+        <button class="more-feature" type="button" data-open="menu-open-journal-btn"><span class="more-icon">✍️</span><span><strong>My journal</strong><small>A private space to reflect</small></span><span class="more-arrow">→</span></button>
+        <button class="more-feature" type="button" data-open="menu-open-dashboard-btn"><span class="more-icon">🌱</span><span><strong>My progress</strong><small>Notice the steps you’ve taken</small></span><span class="more-arrow">→</span></button>
+        <button class="more-feature" type="button" data-open="menu-open-goals-btn"><span class="more-icon">🎯</span><span><strong>Goals &amp; intentions</strong><small>Choose a small next step</small></span><span class="more-arrow">→</span></button>
+        <button class="more-feature" type="button" data-open="menu-view-saved-btn"><span class="more-icon">🔖</span><span><strong>Saved learning</strong><small>Return to resources you saved</small></span><span class="more-arrow">→</span></button>
+        <button class="more-feature" type="button" data-open="menu-open-auth-btn"><span class="more-icon">👤</span><span><strong>Account</strong><small>Sign in or manage your account</small></span><span class="more-arrow">→</span></button>
+        <button class="more-feature more-emergency" type="button" data-open="emergency-action-btn-main"><span class="more-icon">☎️</span><span><strong>Get help right now</strong><small>Free, confidential support is available</small></span><span class="more-arrow">→</span></button>
+      </div>
+      <div class="more-safety"><div><span class="sh-eyebrow">NEED IMMEDIATE HELP?</span><h3>You deserve support right now.</h3><p>If someone may be overdosing or in immediate danger, call 911. For emotional crisis support in the U.S., call or text 988.</p></div><div class="more-safety-actions"><a class="sh-primary-btn" href="tel:988">Call or text 988</a><a class="sh-secondary-btn" href="tel:911">Medical emergency · 911</a></div></div>
+      <div class="more-settings"><h3>Privacy &amp; account</h3><button type="button" data-open="menu-open-privacy-btn">Privacy &amp; data policy <span>→</span></button><button type="button" data-open="menu-change-role-btn">Change default role <span>→</span></button></div>
+    </section>
+
+    <section id="practice-view" class="sh-page" aria-label="Interactive coping exercises" hidden>
+      <div class="sh-page-heading"><span class="sh-eyebrow">ONE MOMENT AT A TIME</span><h2>Tools for a hard moment</h2><p>Small, optional exercises to help you pause and reconnect with what’s here. Skip anything that doesn’t feel right.</p></div>
+      <div class="practice-layout">
+        <div class="practice-selector" role="group" aria-label="Choose an exercise">
+          <button class="practice-choice active" type="button" aria-pressed="true" data-practice="urge"><span>🌊</span><span><strong>Ride an urge</strong><small>Urge surfing · 2 minutes</small></span><b>→</b></button>
+          <button class="practice-choice" type="button" aria-pressed="false" data-practice="ground"><span>🌿</span><span><strong>Come back to now</strong><small>Grounding · 5 senses</small></span><b>→</b></button>
+          <button class="practice-choice" type="button" aria-pressed="false" data-practice="reframe"><span>💭</span><span><strong>Untangle a thought</strong><small>CBT-inspired thought check</small></span><b>→</b></button>
+        </div>
+        <div class="practice-panel" id="practice-panel" aria-live="polite"></div>
+      </div>
+      <p class="sh-footnote">These are optional self-guided reflection tools, not treatment or a substitute for professional care. If you may be in immediate danger, call 911; call or text 988 for U.S. crisis support.</p>
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════════
          PINNED EMERGENCY BANNER
@@ -264,11 +333,11 @@
         <span class="tab-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
         <span>Check-in</span>
       </button>
-      <button class="tab-btn" id="tab-ai" aria-label="AI companion">
+      <button class="tab-btn" id="tab-ai" data-tab="companion" aria-label="AI companion">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span>Companion</span>
       </button>
-      <button class="tab-btn" id="tab-more" aria-label="More options">
+      <button class="tab-btn" id="tab-more" data-tab="more" aria-label="More options">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>
         <span>More</span>
       </button>
@@ -1064,7 +1133,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-          Wellness Companion
+          <span id="ai-buddy-avatar" class="ai-buddy-avatar" aria-hidden="true">🦦</span>
+          <span id="ai-buddy-name">Wellness Companion</span>
         </h2>
         <div style="display: flex; gap: 8px; align-items: center;">
           <button id="ai-new-convo-btn" title="Start new conversation" style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); color: var(--text-muted); font-size: 0.72rem; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: inherit;">New Chat</button>
