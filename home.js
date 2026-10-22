@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ─────────────────────────────────────────────────────────────
   // Tabs
   // ─────────────────────────────────────────────────────────────
-  const viewTabs = ["home", "learn", "companion", "more", "practice"];
+  const viewTabs = ["home", "learn", "companion", "more", "practice", "scenario", "support"];
 
   function setTab(name) {
     if (!viewTabs.includes(name)) return;
@@ -36,11 +36,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const companionPage = $("companion-view");
     const morePage = $("more-view");
     const practicePage = $("practice-view");
+    const scenarioPage = $("scenario-view");
+    const supportPage = $("support-view");
     if (companionPage) companionPage.hidden = name !== "companion";
     if (morePage) morePage.hidden = name !== "more";
     if (practicePage) practicePage.hidden = name !== "practice";
+    if (scenarioPage) scenarioPage.hidden = name !== "scenario";
+    if (supportPage) supportPage.hidden = name !== "support";
     document.querySelectorAll("#tab-bar .tab-btn[data-tab]").forEach((b) => {
-      const on = b.dataset.tab === name || (name === "practice" && b.dataset.tab === "learn");
+      const on = b.dataset.tab === name || (["practice", "scenario", "support"].includes(name) && b.dataset.tab === "learn");
       b.classList.toggle("active", on);
       if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
@@ -173,6 +177,84 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPractice();
   });
   renderPractice();
+
+  // A short, sourced practice scenario. Any unsafe choice gets a gentle explanation,
+  // then lets the learner try again; it never grades or frames the outcome as a game.
+  const scenarioPanel = $("scenario-panel");
+  const scenarioSteps = [
+    { title: "You notice they won’t wake up", text: "Their breathing seems very slow. You don’t know what they took. What should you do first?", choices: [
+      ["Call 911 now and put the phone on speaker.", "correct", "Yes. Call 911 immediately, share your exact location, and follow the dispatcher’s instructions. If naloxone is available, give it."],
+      ["Wait a while to see if they sleep it off.", "retry", "A person who is hard to wake or breathing abnormally needs urgent help. Call 911 now; don’t leave them alone."],
+      ["Try to make them vomit.", "retry", "Don’t try to make them vomit. Call 911, follow the dispatcher, and give naloxone if it’s available."],
+    ] },
+    { title: "Help is on the way", text: "You called 911. Naloxone is nearby. What next?", choices: [
+      ["Give naloxone if available, following the package directions.", "correct", "Right. Naloxone can reverse an opioid overdose and should be given if available. Keep following the dispatcher’s instructions."],
+      ["Leave to find out what they took.", "retry", "Stay with them. Don’t delay emergency care to identify a substance."],
+      ["Assume naloxone is unsafe if you’re unsure what they took.", "retry", "CDC advises giving naloxone if available when overdose is suspected. Call 911 and follow the dispatcher’s instructions."],
+    ] },
+    { title: "Stay with them", text: "While waiting for emergency responders, what should you do?", choices: [
+      ["Stay, try to keep them breathing, and follow dispatcher guidance.", "correct", "Yes. Stay with them until help arrives. If they are breathing, place them on their side to help prevent choking. Tell responders what you observed and what you gave."],
+      ["Leave once they seem a little better.", "retry", "Stay until emergency responders arrive. Naloxone can wear off, and urgent medical evaluation is still important."],
+      ["Give food or a drink to wake them up.", "retry", "Don’t give food or drink to someone who is not fully alert. Stay with them and follow the 911 dispatcher."],
+    ] },
+  ];
+  let scenarioStep = 0;
+  let scenarioFeedback = "";
+  function renderScenario() {
+    if (!scenarioPanel) return;
+    if (scenarioStep >= scenarioSteps.length) {
+      scenarioPanel.innerHTML = `<span class="sh-eyebrow">PRACTICE COMPLETE</span><h3>You practiced the key steps</h3><p>Call 911. Give naloxone if available. Stay with the person and follow dispatcher guidance.</p><button type="button" class="sh-primary-btn" data-scenario-reset>Practice again</button>`;
+      return;
+    }
+    const step = scenarioSteps[scenarioStep];
+    scenarioPanel.innerHTML = `<div class="scenario-progress">STEP ${scenarioStep + 1} OF ${scenarioSteps.length}</div><h3>${esc(step.title)}</h3><p>${esc(step.text)}</p>${scenarioFeedback ? `<p class="scenario-feedback" role="status">${esc(scenarioFeedback)}</p>` : ""}<div class="scenario-choices">${step.choices.map((choice, i) => `<button type="button" class="sh-secondary-btn" data-scenario-choice="${i}">${esc(choice[0])}</button>`).join("")}</div>`;
+  }
+  scenarioPanel?.addEventListener("click", (event) => {
+    if (event.target.closest("[data-scenario-reset]")) { scenarioStep = 0; scenarioFeedback = ""; renderScenario(); return; }
+    const button = event.target.closest("[data-scenario-choice]");
+    if (!button) return;
+    const choice = scenarioSteps[scenarioStep].choices[Number(button.dataset.scenarioChoice)];
+    if (choice[1] === "correct") scenarioStep += 1;
+    scenarioFeedback = choice[2];
+    renderScenario();
+  });
+  renderScenario();
+
+  // Map uses OpenStreetMap in an iframe; precise coordinates are requested only on tap.
+  const supportMap = $("support-map");
+  const supportResults = $("support-results");
+  const supportStatus = $("support-status");
+  function showSupportLocation(label, query) {
+    if (!supportMap || !supportResults) return;
+    const q = encodeURIComponent(query);
+    supportMap.src = `https://maps.google.com/maps?q=${q}&z=13&output=embed`;
+    supportMap.hidden = false;
+    supportResults.innerHTML = `<a href="https://www.google.com/maps/search/substance+use+support+near+${q}" target="_blank" rel="noopener">View treatment and support listings near ${esc(label)} ↗</a><a href="https://findtreatment.gov/" target="_blank" rel="noopener">Search the official SAMHSA treatment locator ↗</a>`;
+    supportResults.hidden = false;
+    if (supportStatus) supportStatus.textContent = `Showing map and support search options for ${label}. Listings may change; verify details with the provider.`;
+  }
+  $("support-search-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const place = $("support-place")?.value.trim();
+    if (!place) return;
+    if (supportStatus) supportStatus.textContent = "Finding this location…";
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(place)}`, { headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error("Search unavailable");
+      const results = await response.json();
+      if (!results.length) { if (supportStatus) supportStatus.textContent = "We couldn’t find that place. Try a nearby city or ZIP code."; return; }
+      const found = results[0];
+      showSupportLocation(found.display_name.split(",").slice(0, 2).join(","), `${found.lat},${found.lon}`);
+    } catch (_) { if (supportStatus) supportStatus.textContent = "Location search is unavailable right now. Try FindTreatment.gov below."; }
+  });
+  $("support-locate")?.addEventListener("click", () => {
+    if (!navigator.geolocation) { if (supportStatus) supportStatus.textContent = "Location isn’t available in this browser. Enter a city or ZIP code instead."; return; }
+    if (supportStatus) supportStatus.textContent = "Waiting for your location permission…";
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      showSupportLocation("your area", `${latitude},${longitude}`);
+    }, () => { if (supportStatus) supportStatus.textContent = "We couldn’t access your location. You can enter a city or ZIP code instead."; }, { timeout: 10000, maximumAge: 300000 });
+  });
 
   // Anything that filters/shows the resource feed should land on the Learn tab
   $("menu-view-saved-btn")?.addEventListener("click", () => setTab("learn"));

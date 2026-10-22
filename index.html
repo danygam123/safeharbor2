@@ -180,6 +180,8 @@
         <span class="hm-breath-go" aria-hidden="true">›</span>
       </button>
       <button class="hm-practice-cta" type="button" data-open-tab="practice"><span aria-hidden="true">🌊</span><span><strong>Try a guided exercise</strong><small>Grounding, urge surfing, or a gentle thought check</small></span><b aria-hidden="true">→</b></button>
+      <button class="hm-practice-cta scenario-cta" type="button" data-open-tab="scenario"><span aria-hidden="true">🧭</span><span><strong>Practice helping in an emergency</strong><small>Try a guided overdose response scenario</small></span><b aria-hidden="true">→</b></button>
+      <button class="hm-practice-cta scenario-cta" type="button" data-open-tab="support"><span aria-hidden="true">📍</span><span><strong>Find support near you</strong><small>Explore nearby care and support services</small></span><b aria-hidden="true">→</b></button>
 
       <div class="hm-card hm-fact" id="hm-fact" role="button" tabindex="0" aria-expanded="false">
         <div class="hm-card-head"><h3>💡 Did you know?</h3><button class="hm-link" id="hm-fact-next" type="button">Another</button></div>
@@ -288,6 +290,23 @@
       <p class="sh-footnote">These are optional self-guided reflection tools, not treatment or a substitute for professional care. If you may be in immediate danger, call 911; call or text 988 for U.S. crisis support.</p>
     </section>
 
+    <section id="scenario-view" class="sh-page" aria-label="Overdose response learning scenario" hidden>
+      <div class="sh-page-heading"><span class="sh-eyebrow">PRACTICE FOR LEARNING</span><h2>Someone may be overdosing</h2><p>Try the next step in a calm, guided scenario. This is practice, not real-time emergency help.</p></div>
+      <div class="scenario-emergency"><strong>If this is happening now, call 911 immediately.</strong><span>Put your phone on speaker and follow the dispatcher’s instructions.</span><a href="tel:911">Call 911</a></div>
+      <div class="scenario-card" id="scenario-panel" aria-live="polite"></div>
+      <p class="scenario-source">Learning steps based on <a href="https://www.cdc.gov/stop-overdose/response/" target="_blank" rel="noopener">CDC overdose response guidance</a>. If unsure, call 911.</p>
+    </section>
+
+    <section id="support-view" class="sh-page" aria-label="Nearby support finder" hidden>
+      <div class="sh-page-heading"><span class="sh-eyebrow">LOCAL SUPPORT</span><h2>Find support near you</h2><p>Choose a location method to look for nearby treatment, counseling, and community services.</p></div>
+      <div class="support-privacy"><strong>Your location stays in this browser.</strong><span>We use it only to find nearby listings. The map provider receives the search coordinates when you open results.</span></div>
+      <div class="support-controls"><button type="button" id="support-locate" class="sh-primary-btn">Use my current location</button><span>or</span><form id="support-search-form"><label class="sr-only" for="support-place">City or ZIP code</label><input id="support-place" type="text" placeholder="Enter city or ZIP code" autocomplete="postal-code" required><button type="submit" class="sh-secondary-btn">Search</button></form></div>
+      <p id="support-status" class="support-status" role="status" aria-live="polite">Search opens nearby support services in OpenStreetMap. For a crisis, call 988; for immediate danger, call 911.</p>
+      <iframe id="support-map" class="support-map" title="Map of nearby support services" loading="lazy" referrerpolicy="no-referrer" hidden></iframe>
+      <div id="support-results" class="support-results" hidden></div>
+      <div class="support-links"><a href="https://findtreatment.gov/" target="_blank" rel="noopener">FindTreatment.gov · SAMHSA treatment locator</a><a href="https://988lifeline.org/" target="_blank" rel="noopener">Call or text 988 for crisis support</a></div>
+    </section>
+
     <!-- ═══════════════════════════════════════════════════════════
          PINNED EMERGENCY BANNER
     ══════════════════════════════════════════════════════════════ -->
@@ -348,7 +367,7 @@
   <!-- ═══════════════════════════════════════════════════════════════
        DRAWERS OVERLAY / BACKDROP
   ════════════════════════════════════════════════════════════════ -->
-  <div class="drawer-backdrop" id="drawer-backdrop">
+  <div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true">
 
     <!-- ─────────────────────────────────────────────────────────────
          MENU / ABOUT DRAWER (existing)
@@ -363,7 +382,7 @@
           </svg>
           About SafeHarbor
         </h2>
-        <button class="drawer-close" id="menu-drawer-close" aria-label="Close menu">&times;</button>
+        <button class="drawer-close" id="menu-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="about-section">
@@ -489,7 +508,7 @@
           </svg>
           Emergency Contacts
         </h2>
-        <button class="drawer-close" id="emergency-drawer-close" aria-label="Close emergency menu">&times;</button>
+        <button class="drawer-close" id="emergency-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="emergency-drawer-body">
@@ -549,7 +568,7 @@
           </svg>
           Goals &amp; Analytics
         </h2>
-        <button class="drawer-close" id="goals-drawer-close" aria-label="Close goals menu">&times;</button>
+        <button class="drawer-close" id="goals-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="drawer-body" style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 20px;">
@@ -606,7 +625,7 @@
           </svg>
           Volunteer &amp; Admin
         </h2>
-        <button class="drawer-close" id="volunteer-admin-drawer-close" aria-label="Close portal menu">&times;</button>
+        <button class="drawer-close" id="volunteer-admin-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px;">
@@ -697,7 +716,7 @@
           </svg>
           My Account
         </h2>
-        <button class="drawer-close" id="auth-drawer-close" aria-label="Close account drawer">&times;</button>
+        <button class="drawer-close" id="auth-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <div class="drawer-body" style="display: flex; flex-direction: column; gap: 16px; padding-bottom: 24px;">
@@ -803,7 +822,7 @@
           </svg>
           Daily Check-in
         </h2>
-        <button class="drawer-close" id="checkin-drawer-close" aria-label="Close check-in">&times;</button>
+        <button class="drawer-close" id="checkin-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <!-- Auth wall -->
@@ -957,7 +976,7 @@
           </svg>
           My Journal
         </h2>
-        <button class="drawer-close" id="journal-drawer-close" aria-label="Close journal">&times;</button>
+        <button class="drawer-close" id="journal-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <!-- Auth wall -->
@@ -1031,7 +1050,7 @@
           </svg>
           My Progress
         </h2>
-        <button class="drawer-close" id="dashboard-drawer-close" aria-label="Close progress">&times;</button>
+        <button class="drawer-close" id="dashboard-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
 
       <!-- Auth wall -->
@@ -1138,7 +1157,7 @@
         </h2>
         <div style="display: flex; gap: 8px; align-items: center;">
           <button id="ai-new-convo-btn" title="Start new conversation" style="background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); color: var(--text-muted); font-size: 0.72rem; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: inherit;">New Chat</button>
-          <button class="drawer-close" id="ai-drawer-close" aria-label="Close companion">&times;</button>
+          <button class="drawer-close" id="ai-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
         </div>
       </div>
 
@@ -1182,7 +1201,7 @@
         <!-- Input row -->
         <div class="ai-input-row">
           <div style="position: relative; flex: 1;">
-            <textarea id="ai-input" class="ai-input-field" placeholder="Ask about substance risks, coping strategies, peer pressure…" rows="2" maxlength="1000" aria-label="Type your message"></textarea>
+          <textarea id="ai-input" class="ai-input-field" placeholder="What’s on your mind? Ask about coping, substance risks, or supporting a friend…" rows="3" maxlength="1000" aria-label="Type your message"></textarea>
             <span id="ai-char-count" class="ai-char-count">0/1000</span>
           </div>
           <button id="ai-send-btn" class="ai-send-btn" aria-label="Send message">
@@ -1205,7 +1224,7 @@
           </svg>
           Privacy &amp; Data
         </h2>
-        <button class="drawer-close" id="privacy-drawer-close" aria-label="Close privacy">&times;</button>
+        <button class="drawer-close" id="privacy-drawer-close" aria-label="Back to SafeHarbor">← Back</button>
       </div>
       <div class="drawer-body privacy-body">
         <h3>What We Collect</h3>

@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Drawer Elements
   const drawerBackdrop = document.getElementById("drawer-backdrop");
+  const appContainer = document.getElementById("app-container");
   const menuDrawer = document.getElementById("menu-drawer");
   const emergencyDrawer = document.getElementById("emergency-drawer");
   const goalsDrawer = document.getElementById("goals-drawer");
@@ -261,10 +262,22 @@ document.addEventListener("DOMContentLoaded", () => {
     return drawerBackdrop.querySelectorAll(".drawer");
   }
 
+  let drawerReturnFocus = null;
+
   function openDrawer(drawer) {
+    if (!drawerBackdrop.classList.contains("active")) {
+      drawerReturnFocus = document.activeElement;
+      appContainer.inert = true;
+      appContainer.setAttribute("aria-hidden", "true");
+    }
     drawerBackdrop.classList.add("active");
+    drawerBackdrop.setAttribute("aria-hidden", "false");
     getAllDrawers().forEach((d) => { d.style.display = "none"; });
     drawer.style.display = "flex";
+    drawer.setAttribute("role", "region");
+    drawer.setAttribute("aria-label", drawer.querySelector(".drawer-header h2")?.textContent.trim() || "SafeHarbor page");
+    drawer.tabIndex = -1;
+    requestAnimationFrame(() => drawer.focus({ preventScroll: true }));
   }
 
   function closeAllDrawers() {
@@ -273,6 +286,12 @@ document.addEventListener("DOMContentLoaded", () => {
       // Don't hide anything if a drawer was re-opened during the close delay
       if (drawerBackdrop.classList.contains("active")) return;
       getAllDrawers().forEach((d) => { d.style.display = "none"; });
+      appContainer.inert = false;
+      appContainer.removeAttribute("aria-hidden");
+      drawerBackdrop.setAttribute("aria-hidden", "true");
+      const returnFocus = drawerReturnFocus;
+      drawerReturnFocus = null;
+      if (returnFocus && document.contains(returnFocus)) returnFocus.focus({ preventScroll: true });
     }, 400);
   }
 
@@ -282,6 +301,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el) openDrawer(el);
   };
   window.closeAllDrawers = closeAllDrawers;
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && drawerBackdrop.classList.contains("active")) {
+      closeAllDrawers();
+    }
+  });
 
   // Open a personal-feature drawer, then notify its module so it can load data
   function openFeatureDrawer(drawerId, eventName) {
