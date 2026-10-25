@@ -121,8 +121,17 @@ What's on your mind today?`;
       });
 
       if (!res.ok) {
-        console.error("Chat API error:", res.status);
-        throw new Error(`API error ${res.status}`);
+        let errorMessage = "The AI service is temporarily unavailable. Please try again shortly.";
+        try {
+          const errorBody = await res.json();
+          if (typeof errorBody?.error === "string" && errorBody.error.trim()) {
+            errorMessage = errorBody.error.trim();
+          }
+        } catch (_) {
+          // Keep the safe fallback if the server didn't return JSON.
+        }
+        console.error("Chat API error:", res.status, errorMessage);
+        throw new Error(errorMessage);
       }
 
       const json = await res.json();
@@ -140,8 +149,9 @@ What's on your mind today?`;
 
     } catch (err) {
       setLoading(false);
-      let msg = "I ran into a problem connecting. Please check your internet connection and try again.";
-      if (err.message?.includes("429")) msg = "I'm a little busy right now. Please wait a moment and try again.";
+      let msg = err.name === "TypeError"
+        ? "I couldn't reach the chat service. Check your internet connection and try again."
+        : (err.message || "The AI service is temporarily unavailable. Please try again shortly.");
       if (isCrisis) {
         msg += "\n\n**If you're in crisis, call or text 988 any time. If it's a medical emergency, call 911.**";
       }

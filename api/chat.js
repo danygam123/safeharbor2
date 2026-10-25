@@ -125,11 +125,9 @@ module.exports = async function handler(req, res) {
     system_instruction: { parts: [{ text: systemInstruction }] },
     contents,
     generationConfig: {
-      temperature: 0.7,
       // Generous limit: on "thinking" models, thinking tokens count against this budget, and a small
       // limit can leave no room for the visible reply. The system prompt keeps answers short anyway.
       maxOutputTokens: 2048,
-      topP: 0.9,
       // Only the 2.5 family needs thinking switched off; newer models reject/ignore model-specific
       // thinking settings, so none are sent for them.
       ...(model.includes("2.5") ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
@@ -150,8 +148,22 @@ module.exports = async function handler(req, res) {
     });
 
     if (!upstream.ok) {
-      console.error("Gemini error", upstream.status, (await upstream.text()).slice(0, 300));
-      return res.status(upstream.status === 429 ? 429 : 502).json({ error: "The AI service is unavailable right now." });
+      const details = (await upstream.text()).slice(0, 300);
+      console.error("Gemini error", upstream.status, details);
+
+      // Keep provider internals in server logs, but return a useful, non-sensitive
+      // next step to the app so configuration and quota errors aren't mistaken for offline use.
+      const safeErrors = {
+        400: "Gemini rejected the chat request. Check the configured model and request settings.",
+        401: "Gemini rejected the server API key. Check the Production GEMINI_API_KEY in Vercel.",
+        403: "Gemini denied access for this API key. Check its Gemini API access and project status.",
+        404: "The configured Gemini model was not found. Check GEMINI_MODEL in Vercel.",
+        429: "Gemini rate limit or quota reached. Wait a moment or review the project's AI usage limits.",
+      };
+      const status = upstream.status === 429 ? 429 : 502;
+      return res.status(status).json({
+        error: safeErrors[upstream.status] || "Gemini is temporarily unavailable. Please try again shortly.",
+      });
     }
 
     const json = await upstream.json();
