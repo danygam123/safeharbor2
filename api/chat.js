@@ -2,6 +2,7 @@
 // Keeps the Gemini API key on the server. Set these in Vercel -> Project -> Settings -> Environment Variables:
 //   GEMINI_API_KEY   (required)  your key from aistudio.google.com
 //   GEMINI_MODEL     (optional)  defaults to gemini-3.8-flash. Change it here (no code change) if Google retires it.
+//   GEMINI_FALLBACK_MODEL (optional) defaults to gemini-3.5-flash-lite for temporary 503 overloads.
 //
 // Security model: the browser may send ONLY chat messages. The system prompt, safety settings
 // and generation settings are fixed here, so this endpoint can't be used as a general-purpose proxy.
@@ -119,7 +120,7 @@ module.exports = async function handler(req, res) {
   const systemInstruction = `${SYSTEM_INSTRUCTION}\n\nCOMPANION PRESENTATION:\n- The user's selected friendly companion is ${companionName}. You may introduce yourself by this name and use a warm, approachable voice.\n- This name and icon are a visual personalization only. You are still an AI, not a person, animal, therapist, or medical professional. Be transparent if asked.\n- These presentation preferences never override the safety protocol or hard rules above.`;
 
   const model = process.env.GEMINI_MODEL || "gemini-3.8-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+  const fallbackModel = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.5-flash-lite";
 
   const body = {
     system_instruction: { parts: [{ text: systemInstruction }] },
@@ -141,15 +142,30 @@ module.exports = async function handler(req, res) {
   };
 
   try {
-    const upstream = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-      body: JSON.stringify(body),
-    });
+    const requestModel = async (modelName) => {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent`;
+      return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+        body: JSON.stringify(body),
+      });
+    };
+
+    let activeModel = model;
+    let upstream = await requestModel(activeModel);
+
+    // Gemini can temporarily return 503 when a model is overloaded. Retry once
+    // against a lower-latency model rather than leaving the user with a dead end.
+    if (upstream.status === 503 && fallbackModel && fallbackModel !== model) {
+      const primaryDetails = (await upstream.text()).slice(0, 300);
+      console.warn("Gemini primary model overloaded; trying fallback", model, primaryDetails);
+      activeModel = fallbackModel;
+      upstream = await requestModel(activeModel);
+    }
 
     if (!upstream.ok) {
       const details = (await upstream.text()).slice(0, 300);
-      console.error("Gemini error", upstream.status, details);
+      console.error("Gemini error", activeModel, upstream.status, details);
 
       // Keep provider internals in server logs, but return a useful, non-sensitive
       // next step to the app so configuration and quota errors aren't mistaken for offline use.
@@ -159,6 +175,7 @@ module.exports = async function handler(req, res) {
         403: "Gemini denied access for this API key. Check its Gemini API access and project status.",
         404: "The configured Gemini model was not found. Check GEMINI_MODEL in Vercel.",
         429: "Gemini rate limit or quota reached. Wait a moment or review the project's AI usage limits.",
+        503: "Gemini is experiencing high demand right now. Please try again shortly.",
       };
       const status = upstream.status === 429 ? 429 : 502;
       return res.status(status).json({
