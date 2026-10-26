@@ -134,11 +134,69 @@ What's on your mind today?`;
         throw new Error(errorMessage);
       }
 
-      const json = await res.json();
-      const replyText = json?.reply || "I'm sorry, I wasn't able to generate a response. Please try again.";
+      let replyText = "";
+      let replyBubble = null;
+      const contentType = res.headers.get("content-type") || "";
+
+      if (contentType.includes("text/event-stream") && res.body) {
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        const handleEvent = (eventText) => {
+          const data = eventText
+            .split(/\r?\n/)
+            .filter((line) => line.startsWith("data:"))
+            .map((line) => line.slice(5).trimStart())
+            .join("\n");
+          if (!data || data === "[DONE]") return;
+
+          let event;
+          try {
+            event = JSON.parse(data);
+          } catch (_) {
+            return;
+          }
+          if (event?.error) {
+            throw new Error(event.error.message || "The AI service stopped responding. Please try again.");
+          }
+
+          const text = event?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("") || "";
+          if (!text) return;
+          replyText += text;
+          if (!replyBubble) {
+            if (aiLoadingEl) aiLoadingEl.style.display = "none";
+            replyBubble = appendMessage("model", "");
+          }
+          replyBubble.innerHTML = renderMarkdown(replyText);
+          scrollToBottom();
+        };
+
+        while (true) {
+          const { value, done } = await reader.read();
+          buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+          let boundary;
+          while ((boundary = buffer.match(/\r?\n\r?\n/))) {
+            const index = boundary.index;
+            handleEvent(buffer.slice(0, index));
+            buffer = buffer.slice(index + boundary[0].length);
+          }
+          if (done) break;
+        }
+        if (buffer.trim()) handleEvent(buffer);
+      } else {
+        // Keep compatibility with older deployments that return one JSON response.
+        const json = await res.json();
+        replyText = json?.reply || "I'm sorry, I wasn't able to generate a response. Please try again.";
+        replyBubble = appendMessage("model", replyText);
+      }
+
+      if (!replyText) {
+        replyText = "I'm not able to help with that one, but I'm still here for you. If you're in crisis, call or text **988**. If it's a medical emergency, call **911**. You can also ask me about coping strategies or supporting a friend.";
+        replyBubble = appendMessage("model", replyText);
+      }
 
       setLoading(false);
-      const replyBubble = appendMessage("model", replyText);
       conversationHistory.push({ role: "model", parts: [{ text: replyText }] });
 
       // Add crisis resource reminder if crisis keyword was detected

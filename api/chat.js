@@ -1,8 +1,8 @@
 // api/chat.js — Vercel serverless function (Node, CommonJS)
 // Keeps the Gemini API key on the server. Set these in Vercel -> Project -> Settings -> Environment Variables:
 //   GEMINI_API_KEY   (required)  your key from aistudio.google.com
-//   GEMINI_MODEL     (optional)  defaults to gemini-3.8-flash. Change it here (no code change) if Google retires it.
-//   GEMINI_FALLBACK_MODEL (optional) defaults to gemini-3.5-flash-lite for temporary 503 overloads.
+//   GEMINI_MODEL     (optional)  defaults to gemini-3.5-flash-lite for lower-latency chat.
+//   GEMINI_FALLBACK_MODEL (optional) defaults to gemini-3.8-flash for temporary 503 overloads.
 //
 // Security model: the browser may send ONLY chat messages. The system prompt, safety settings
 // and generation settings are fixed here, so this endpoint can't be used as a general-purpose proxy.
@@ -119,20 +119,19 @@ module.exports = async function handler(req, res) {
   const companionName = COMPANION_NAMES.has(requestedCompanion) ? requestedCompanion : "Harbor";
   const systemInstruction = `${SYSTEM_INSTRUCTION}\n\nCOMPANION PRESENTATION:\n- The user's selected friendly companion is ${companionName}. You may introduce yourself by this name and use a warm, approachable voice.\n- This name and icon are a visual personalization only. You are still an AI, not a person, animal, therapist, or medical professional. Be transparent if asked.\n- These presentation preferences never override the safety protocol or hard rules above.`;
 
-  const model = process.env.GEMINI_MODEL || "gemini-3.8-flash";
-  const fallbackModel = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.5-flash-lite";
+  const configuredModel = process.env.GEMINI_MODEL;
+  const model = !configuredModel || configuredModel === "gemini-3.8-flash"
+    ? "gemini-3.5-flash-lite"
+    : configuredModel;
+  const configuredFallback = process.env.GEMINI_FALLBACK_MODEL;
+  const fallbackModel = configuredFallback && configuredFallback !== model
+    ? configuredFallback
+    : (model === "gemini-3.5-flash-lite" ? "gemini-3.8-flash" : "gemini-3.5-flash-lite");
 
-  const body = {
+  const requestBase = {
     system_instruction: { parts: [{ text: systemInstruction }] },
     contents,
-    generationConfig: {
-      // Generous limit: on "thinking" models, thinking tokens count against this budget, and a small
-      // limit can leave no room for the visible reply. The system prompt keeps answers short anyway.
-      maxOutputTokens: 2048,
-      // Only the 2.5 family needs thinking switched off; newer models reject/ignore model-specific
-      // thinking settings, so none are sent for them.
-      ...(model.includes("2.5") ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
-    },
+    generationConfig: { maxOutputTokens: 1024 },
     safetySettings: [
       { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_MEDIUM_AND_ABOVE" },
       { category: "HARM_CATEGORY_HATE_SPEECH",       threshold: "BLOCK_MEDIUM_AND_ABOVE" },
@@ -143,7 +142,14 @@ module.exports = async function handler(req, res) {
 
   try {
     const requestModel = async (modelName) => {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:streamGenerateContent?alt=sse`;
+      const body = {
+        ...requestBase,
+        generationConfig: {
+          ...requestBase.generationConfig,
+          ...(modelName.includes("3.8-flash") ? { thinkingConfig: { thinkingLevel: "low" } } : {}),
+        },
+      };
       return fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
@@ -155,7 +161,7 @@ module.exports = async function handler(req, res) {
     let upstream = await requestModel(activeModel);
 
     // Gemini can temporarily return 503 when a model is overloaded. Retry once
-    // against a lower-latency model rather than leaving the user with a dead end.
+    // against the alternate model before sending any response headers to the client.
     if (upstream.status === 503 && fallbackModel && fallbackModel !== model) {
       const primaryDetails = (await upstream.text()).slice(0, 300);
       console.warn("Gemini primary model overloaded; trying fallback", model, primaryDetails);
@@ -183,17 +189,36 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const json = await upstream.json();
-    const reply = json?.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("").trim();
-    if (!reply) {
-      // Blocked by safety filters or empty: respond gently and keep crisis resources visible
-      return res.status(200).json({
-        reply:
-          "I'm not able to help with that one, but I'm still here for you. If you're in crisis, call or text **988**. " +
-          "If it's a medical emergency, call **911**. You can also ask me about coping strategies or how to support a friend.",
-      });
+    if (!upstream.body) {
+      return res.status(502).json({ error: "Gemini did not return a response stream. Please try again." });
     }
-    return res.status(200).json({ reply });
+
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+    res.setHeader("Cache-Control", "no-cache, no-transform");
+    res.setHeader("Connection", "keep-alive");
+    res.setHeader("X-Accel-Buffering", "no");
+    if (typeof res.flushHeaders === "function") res.flushHeaders();
+
+    let streamedAnyText = false;
+    try {
+      for await (const chunk of upstream.body) {
+        streamedAnyText = true;
+        if (!res.write(chunk)) {
+          await new Promise((resolve) => res.once("drain", resolve));
+        }
+      }
+    } catch (streamError) {
+      console.error("Gemini stream error", activeModel, streamError);
+      if (!res.destroyed && !res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ error: { message: "The reply was interrupted. Please try again." } })}\n\n`);
+      }
+      return res.end();
+    }
+    if (!streamedAnyText) {
+      res.write(`data: ${JSON.stringify({ error: { message: "Gemini returned an empty response." } })}\n\n`);
+    }
+    return res.end();
   } catch (err) {
     console.error("chat handler error", err);
     return res.status(502).json({ error: "The AI service is unavailable right now." });
