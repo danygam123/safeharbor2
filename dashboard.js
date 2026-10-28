@@ -20,6 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const statGoalsMet       = document.getElementById("stat-goals-met");
   const moodChartEl        = document.getElementById("mood-chart-svg");
   const stressChartEl      = document.getElementById("stress-chart-svg");
+  const homeMoodChartEl    = document.getElementById("hm-mood-chart-svg");
+  const homeStressChartEl  = document.getElementById("hm-stress-chart-svg");
+  const homeProgressCard   = document.getElementById("hm-progress-preview");
+  const homeProgressLock   = document.getElementById("hm-progress-lock");
+  const homeStatCheckins   = document.getElementById("hm-stat-checkins");
+  const homeStatMood       = document.getElementById("hm-stat-mood");
+  const homeStatStress     = document.getElementById("hm-stat-stress");
+  const homeStatGoals      = document.getElementById("hm-stat-goals");
+  let homeProgressRequest = 0;
   const dashCopingList     = document.getElementById("dash-coping-list");
   const dashGoalsList      = document.getElementById("dash-goals-list");
   const dashWeekReflection = document.getElementById("dash-week-reflection");
@@ -55,12 +64,95 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   window.addEventListener("safeharbor:authchange", ({ detail }) => {
+    syncHomeProgress(detail.user);
     const dashDrawer = document.getElementById("dashboard-drawer");
     if (dashDrawer && dashDrawer.style.display !== "none") {
       if (detail.user) { hideAuthWall(); loadDashboard(); }
       else showAuthWall();
     }
   });
+
+  document.getElementById("hm-progress-signin")?.addEventListener("click", () => {
+    window.openDrawerById?.("auth-drawer");
+  });
+
+  // The home preview follows the signed-in user's private check-ins.
+  syncHomeProgress(window.SH_Auth?.getUser());
+
+  async function syncHomeProgress(user) {
+    if (!homeMoodChartEl || !homeStressChartEl || !homeProgressCard) return;
+    const requestId = ++homeProgressRequest;
+    const signedIn = !!user && !!db;
+    homeProgressCard.classList.toggle("is-locked", !signedIn);
+    homeProgressCard.classList.toggle("is-loading", signedIn);
+    if (homeProgressLock) {
+      homeProgressLock.hidden = false;
+      const title = homeProgressLock.querySelector("strong");
+      const button = homeProgressLock.querySelector("button");
+      if (title) title.textContent = signedIn ? "Loading your progress…" : "Sign in to see your progress";
+      if (button) button.hidden = signedIn;
+    }
+
+    if (!signedIn) {
+      [homeStatCheckins, homeStatMood, homeStatStress, homeStatGoals].forEach((el) => { if (el) el.textContent = "—"; });
+      const previewDays = getLast7Days();
+      homeMoodChartEl.innerHTML = buildBarChart([2, 4, 3, 5, 4, 3, 4], new Array(7).fill("#62a995"), previewDays.map((day) => dayLabel(day)));
+      homeStressChartEl.innerHTML = buildBarChart([4, 3, 4, 2, 3, 4, 3], new Array(7).fill("#82a99d"), previewDays.map((day) => dayLabel(day)));
+      return;
+    }
+
+    [homeStatCheckins, homeStatMood, homeStatStress, homeStatGoals].forEach((el) => { if (el) el.textContent = "—"; });
+    const loadingDays = getLast7Days().map(dayLabel);
+    homeMoodChartEl.innerHTML = buildBarChart([2, 4, 3, 5, 4, 3, 4], new Array(7).fill("#62a995"), loadingDays);
+    homeStressChartEl.innerHTML = buildBarChart([4, 3, 4, 2, 3, 4, 3], new Array(7).fill("#82a99d"), loadingDays);
+
+    const [checkinsResult, goalsResult] = await Promise.all([
+      db.from("checkins")
+        .select("entry_date, mood, stress")
+        .eq("user_id", user.id)
+        .order("entry_date", { ascending: false })
+        .limit(30),
+      db.from("personal_goals")
+        .select("status")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(20),
+    ]);
+    if (requestId !== homeProgressRequest || window.SH_Auth?.getUser()?.id !== user.id) return;
+    if (checkinsResult.error || goalsResult.error) {
+      homeProgressCard.classList.remove("is-loading");
+      if (homeProgressLock) homeProgressLock.hidden = true;
+      const message = `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#64748b" font-size="12">Progress is temporarily unavailable</text>`;
+      homeMoodChartEl.innerHTML = message;
+      homeStressChartEl.innerHTML = message;
+      return;
+    }
+
+    const checkins = checkinsResult.data || [];
+    const goals = goalsResult.data || [];
+    const avg = (key) => {
+      const values = checkins.map((row) => row[key]).filter((value) => Number.isFinite(value));
+      return values.length ? (values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(1) : "—";
+    };
+    if (homeStatCheckins) homeStatCheckins.textContent = String(checkins.length);
+    if (homeStatMood) homeStatMood.textContent = avg("mood");
+    if (homeStatStress) homeStatStress.textContent = avg("stress");
+    if (homeStatGoals) homeStatGoals.textContent = `${goals.filter((goal) => goal.status === "met").length} / ${goals.length}`;
+
+    const byDate = Object.fromEntries(checkins.map((row) => [row.entry_date, row]));
+    const days = getLast7Days();
+    const moodValues = days.map((day) => byDate[day]?.mood || 0);
+    const stressValues = days.map((day) => byDate[day]?.stress || 0);
+    const labels = days.map(dayLabel);
+    homeMoodChartEl.innerHTML = buildBarChart(moodValues, moodValues.map(getMoodColor), labels);
+    homeStressChartEl.innerHTML = buildBarChart(stressValues, stressValues.map(getStressColor), labels);
+    homeProgressCard.classList.remove("is-loading");
+    if (homeProgressLock) homeProgressLock.hidden = true;
+  }
+
+  function dayLabel(day) {
+    return new Date(day + "T12:00:00").toLocaleDateString(undefined, { weekday: "short" }).slice(0, 3);
+  }
 
   // ── Main loader ──────────────────────────────────────────────────
   async function loadDashboard() {
@@ -122,24 +214,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#64748b" font-size="11">Not enough data yet</text>`;
     }
 
-    const W = 280, H = 90, padX = 24, padY = 8;
+    const W = 350, H = 120, padX = 18, padY = 20;
     const maxVal = 5;
-    const barW = Math.max(8, (W - padX * 2) / values.length - 4);
+    const step = (W - padX * 2) / values.length;
+    const barW = Math.max(8, step - 12);
     const chartH = H - padY * 2;
 
     let bars = "";
     values.forEach((v, i) => {
-      const x = padX + i * ((W - padX * 2) / values.length);
+      const x = padX + i * step;
       const barH = v ? (v / maxVal) * chartH : 2;
       const y = padY + chartH - barH;
       const color = colors[i] || "#6366f1";
       bars += `
         <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW}" height="${barH.toFixed(1)}"
               rx="3" fill="${color}" opacity="0.85"/>
-        ${labels && labels[i] ? `<text x="${(x + barW / 2).toFixed(1)}" y="${(H - 2).toFixed(1)}"
-              text-anchor="middle" fill="#64748b" font-size="8">${labels[i]}</text>` : ""}
+        ${labels && labels[i] ? `<text x="${(x + barW / 2).toFixed(1)}" y="${(H - 6).toFixed(1)}"
+              text-anchor="middle" fill="#64748b" font-size="11">${labels[i]}</text>` : ""}
         ${v ? `<text x="${(x + barW / 2).toFixed(1)}" y="${(y - 3).toFixed(1)}"
-              text-anchor="middle" fill="#94a3b8" font-size="9">${v}</text>` : ""}
+              text-anchor="middle" fill="#94a3b8" font-size="10">${v}</text>` : ""}
       `;
     });
 

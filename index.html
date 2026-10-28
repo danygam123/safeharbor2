@@ -150,11 +150,29 @@
         <p class="hm-note" id="hm-mood-note">Tap one to start a quick, private check-in.</p>
       </div>
 
-      <button class="hm-progress-cta" id="hm-progress-cta" type="button" aria-label="Open My Progress">
-        <span class="hm-progress-mark" aria-hidden="true">↗</span>
-        <span><strong>My progress</strong><small>See your check-ins and the steps you’ve taken</small></span>
-        <span class="hm-progress-arrow" aria-hidden="true">→</span>
-      </button>
+      <section class="hm-progress-preview is-locked" id="hm-progress-preview" aria-label="Weekly mood progress">
+        <div class="hm-progress-preview-head"><div><span class="hm-section-kicker">YOUR PROGRESS</span><h3>A look at your recent check-ins</h3></div><span class="hm-progress-range">Last 7 days</span></div>
+        <div class="hm-progress-body">
+          <div class="hm-progress-private">
+            <div class="hm-progress-stats" aria-label="Recent check-in summary">
+              <div><strong id="hm-stat-checkins">—</strong><span>Recent check-ins</span></div>
+              <div><strong id="hm-stat-mood">—</strong><span>Avg mood</span></div>
+              <div><strong id="hm-stat-stress">—</strong><span>Avg stress</span></div>
+              <div><strong id="hm-stat-goals">—</strong><span>Goals met</span></div>
+            </div>
+            <div class="hm-progress-charts">
+              <div class="hm-progress-chart-card"><div class="hm-progress-chart-title"><strong>Mood</strong><span>1 low · 5 high</span></div><svg id="hm-mood-chart-svg" class="hm-progress-chart" viewBox="0 0 350 120" role="img" aria-label="Mood check-ins over the last seven days"></svg></div>
+              <div class="hm-progress-chart-card"><div class="hm-progress-chart-title"><strong>Stress</strong><span>1 low · 5 high</span></div><svg id="hm-stress-chart-svg" class="hm-progress-chart" viewBox="0 0 350 120" role="img" aria-label="Stress check-ins over the last seven days"></svg></div>
+            </div>
+          </div>
+          <div class="hm-progress-lock" id="hm-progress-lock">
+            <span class="hm-progress-lock-icon" aria-hidden="true">🔒</span>
+            <strong>Sign in to see your progress</strong>
+            <span>Your check-ins stay private to your account.</span>
+            <button class="hm-progress-signin" id="hm-progress-signin" type="button">Sign in</button>
+          </div>
+        </div>
+      </section>
 
       <div class="hm-section-intro" id="hm-ways-in">
         <span class="hm-section-kicker">WHEN YOU'RE READY</span>
@@ -181,7 +199,8 @@
       </div>
 
       <details class="hm-more-tools">
-        <summary><span><strong>More ways to support yourself</strong><small>Exercises, quick tips, and a daily intention</small></span><span class="hm-tools-chevron" aria-hidden="true">⌄</span></summary>
+        <summary><span class="hm-tools-mark" aria-hidden="true">✦</span><span><strong>More ways to support yourself</strong><small>Exercises, quick tips, and a daily intention</small></span><span class="hm-tools-chevron" aria-hidden="true">⌄</span></summary>
+        <div class="hm-tools-grid">
       <button class="hm-breath-cta" id="hm-breath-cta">
         <span class="hm-breath-orb" aria-hidden="true"></span>
         <span class="hm-breath-text"><strong>Take a breath</strong><small>A guided 1-minute calm-down</small></span>
@@ -202,6 +221,7 @@
         <div class="hm-card-head"><h3>🌱 Today's intention</h3><button class="hm-link" id="hm-intent-next" type="button">New one</button></div>
         <p class="hm-intent-text" id="hm-intent-text"></p>
       </div>
+        </div>
       </details>
 
       <div class="hm-card hm-install" id="hm-install" hidden>
@@ -1106,7 +1126,7 @@
               <span style="color: #6366f1;">■</span> High
             </span>
           </div>
-          <svg id="mood-chart-svg" class="dash-chart-svg" viewBox="0 0 280 90" aria-label="Mood chart for last 7 days"></svg>
+          <svg id="mood-chart-svg" class="dash-chart-svg" viewBox="0 0 350 120" aria-label="Mood chart for last 7 days"></svg>
         </div>
 
         <!-- Stress chart -->
@@ -1118,7 +1138,7 @@
               <span style="color: #f43f5e;">■</span> High
             </span>
           </div>
-          <svg id="stress-chart-svg" class="dash-chart-svg" viewBox="0 0 280 90" aria-label="Stress chart for last 7 days"></svg>
+          <svg id="stress-chart-svg" class="dash-chart-svg" viewBox="0 0 350 120" aria-label="Stress chart for last 7 days"></svg>
         </div>
 
         <!-- Recent check-ins -->

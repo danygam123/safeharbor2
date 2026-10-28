@@ -57,10 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $("tab-learn")?.addEventListener("click", () => { haptic(); setTab("learn"); });
   $("tab-ai")?.addEventListener("click", () => { haptic(); setTab("companion"); });
   $("tab-more")?.addEventListener("click", () => { haptic(); setTab("more"); });
-  $("hm-progress-cta")?.addEventListener("click", () => {
-    haptic();
-    click("menu-open-dashboard-btn");
-  });
   $("tab-checkin")?.addEventListener("click", () => { haptic(12); click("menu-open-checkin-btn"); });
 
   // Companion and More are first-class destinations; their actions reuse existing app tools.
