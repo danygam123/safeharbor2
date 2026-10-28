@@ -2458,6 +2458,7 @@ select.form-input option { background: #0f172a; }
 .support-results a, .support-links a { color:var(--accent-color); font-weight:600; line-height:1.5; }
 .support-links { display:grid; gap:10px; margin:20px 0 28px; padding-top:16px; border-top:1px solid var(--panel-border); }
 .ai-input-field { min-height:88px; padding:14px 14px 25px; font-size:1rem; line-height:1.55; border-radius:16px; background:rgba(255,255,255,.07); }
+.ai-input-field { min-height: 148px; max-height: 240px; padding: 16px 16px 30px; font-size: 1rem; line-height: 1.55; }
 .ai-input-field:focus { box-shadow:0 0 0 3px rgba(20,184,166,.14); }
 .ai-input-row { gap:12px; align-items:flex-end; padding:12px 16px calc(16px + env(safe-area-inset-bottom)); }
 @media (max-width:600px) { .support-controls { align-items:stretch; flex-direction:column; } .support-controls form { width:100%; flex-basis:auto; } .support-map { height:250px; } }
@@ -2652,6 +2653,24 @@ body[data-tab="home"] header { padding-bottom: 12px; }
 .hm-hint { display: block; margin-top: 8px; font-size: .72rem; color: var(--text-muted); }
 .hm-intent-text { font: 500 1.02rem/1.5 'Outfit', sans-serif; color: #e2e8f0; transition: opacity .25s; }
 .hm-intent-text.fade { opacity: 0; }
+
+/* A quieter home screen with personal progress easy to reach. */
+body[data-tab="home"] .hm-progress-cta {
+  display: flex; align-items: center; gap: 13px; width: 100%; padding: 15px 18px;
+  text-align: left; color: #24483f; background: #fff; border: 1px solid #dfeae5;
+  border-radius: 18px; box-shadow: 0 8px 24px rgba(38,65,56,.045); cursor: pointer;
+}
+.hm-progress-mark { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 13px; background: #e9f5ef; color: #32806d; font-size: 1.35rem; font-weight: 700; }
+.hm-progress-cta > span:nth-child(2), .hm-more-tools summary > span:first-child { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.hm-progress-cta strong, .hm-more-tools summary strong { font: 650 .94rem 'Outfit',sans-serif; }
+.hm-progress-cta small, .hm-more-tools summary small { color: #70837c; font-size: .76rem; }
+.hm-progress-arrow { color: #438777; font-size: 1.2rem; }
+.hm-more-tools { display: flex; flex-direction: column; gap: 12px; padding: 12px; background: #f0f6f3; border: 1px solid #e2ece7; border-radius: 20px; }
+.hm-more-tools summary { display: flex; align-items: center; gap: 12px; padding: 5px 5px 5px 2px; color: #294a41; cursor: pointer; list-style: none; }
+.hm-more-tools summary::-webkit-details-marker { display: none; }
+.hm-tools-chevron { color: #5b8b7b; font-size: 1.25rem; transition: transform .2s ease; }
+.hm-more-tools[open] .hm-tools-chevron { transform: rotate(180deg); }
+.hm-more-tools > .hm-practice-cta { margin: 0; }
 
 .hm-install p { font-size: .86rem; color: var(--text-secondary); }
 .hm-primary { margin-top: 10px; background: var(--primary-color); color: #fff; border: 0; border-radius: 12px; padding: 10px 18px; font: 600 .85rem 'Inter', sans-serif; cursor: pointer; }
@@ -3016,6 +3035,7 @@ body[data-tab="learn"] { background: #0b0f19; }
   body[data-tab="home"] #home-view { padding: 42px 44px 32px; gap: 22px; }
   body[data-tab="home"] .hm-hero { padding: 34px 38px; }
   body[data-tab="home"] #hm-mood-card { padding: 22px; }
+  body[data-tab="home"] #hm-progress-cta { max-width: 520px; justify-self: end; }
   body[data-tab="home"] .hm-mood-row { gap: 10px; }
   body[data-tab="home"] .hm-mood { min-height: 84px; }
 }
@@ -3031,6 +3051,7 @@ body[data-tab="learn"] { background: #0b0f19; }
 
   body[data-tab="home"] #hm-hero { grid-column: 1; grid-row: 1; min-height: 100%; }
   body[data-tab="home"] #hm-mood-card { grid-column: 2; grid-row: 1; align-self: stretch; }
+  body[data-tab="home"] #hm-progress-cta { grid-column: 2; grid-row: 2; justify-self: stretch; }
   body[data-tab="home"] #hm-ways-in,
   body[data-tab="home"] #hm-tiles,
   body[data-tab="home"] .hm-section-head,
@@ -3038,6 +3059,7 @@ body[data-tab="learn"] { background: #0b0f19; }
   body[data-tab="home"] .hm-help,
   body[data-tab="home"] .hm-footer { grid-column: 1 / -1; }
   body[data-tab="home"] #hm-ways-in { margin-top: 8px; }
+  body[data-tab="home"] #hm-ways-in { grid-row: 3; }
   body[data-tab="home"] .hm-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   body[data-tab="home"] .hm-breath-cta { grid-column: 1; }
   body[data-tab="home"] .hm-intent { grid-column: 2; }

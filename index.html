@@ -150,6 +150,12 @@
         <p class="hm-note" id="hm-mood-note">Tap one to start a quick, private check-in.</p>
       </div>
 
+      <button class="hm-progress-cta" id="hm-progress-cta" type="button" aria-label="Open My Progress">
+        <span class="hm-progress-mark" aria-hidden="true">↗</span>
+        <span><strong>My progress</strong><small>See your check-ins and the steps you’ve taken</small></span>
+        <span class="hm-progress-arrow" aria-hidden="true">→</span>
+      </button>
+
       <div class="hm-section-intro" id="hm-ways-in">
         <span class="hm-section-kicker">WHEN YOU'RE READY</span>
         <h3>Find your next step</h3>
@@ -174,6 +180,8 @@
         </button>
       </div>
 
+      <details class="hm-more-tools">
+        <summary><span><strong>More ways to support yourself</strong><small>Exercises, quick tips, and a daily intention</small></span><span class="hm-tools-chevron" aria-hidden="true">⌄</span></summary>
       <button class="hm-breath-cta" id="hm-breath-cta">
         <span class="hm-breath-orb" aria-hidden="true"></span>
         <span class="hm-breath-text"><strong>Take a breath</strong><small>A guided 1-minute calm-down</small></span>
@@ -194,6 +202,7 @@
         <div class="hm-card-head"><h3>🌱 Today's intention</h3><button class="hm-link" id="hm-intent-next" type="button">New one</button></div>
         <p class="hm-intent-text" id="hm-intent-text"></p>
       </div>
+      </details>
 
       <div class="hm-card hm-install" id="hm-install" hidden>
         <div class="hm-card-head"><h3>📲 Get the app</h3><button class="hm-link" id="hm-install-dismiss" type="button">Not now</button></div>
@@ -1201,7 +1210,7 @@
         <!-- Input row -->
         <div class="ai-input-row">
           <div style="position: relative; flex: 1;">
-          <textarea id="ai-input" class="ai-input-field" placeholder="What’s on your mind? Ask about coping, substance risks, or supporting a friend…" rows="3" maxlength="1000" aria-label="Type your message"></textarea>
+          <textarea id="ai-input" class="ai-input-field" placeholder="What’s on your mind? Ask about coping, substance risks, or supporting a friend…" rows="4" maxlength="1000" aria-label="Type your message"></textarea>
             <span id="ai-char-count" class="ai-char-count">0/1000</span>
           </div>
           <button id="ai-send-btn" class="ai-send-btn" aria-label="Send message">
