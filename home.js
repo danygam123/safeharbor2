@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const category = supportCategories[supportFilter];
     const search = `${category.query} near ${query}`;
     const q = encodeURIComponent(search);
-    supportMap.src = `https://maps.google.com/maps?q=${q}&z=13&output=embed`;
+    supportMap.src = `https://maps.google.com/maps?q=${encodeURIComponent(category.query)}&ll=${encodeURIComponent(query)}&z=13&output=embed`;
     supportMap.title = `Map search for ${category.label} near ${label}`;
     supportMap.hidden = false;
     supportResults.innerHTML = `<a href="https://www.google.com/maps/search/${q}" target="_blank" rel="noopener">Open ${esc(category.label)} results near ${esc(label)} ↗</a><a href="${category.link}" target="_blank" rel="noopener">${supportFilter === "naloxone" ? "Explore free naloxone access with Next Distro ↗" : supportFilter === "harm-reduction" ? "Learn about harm reduction services ↗" : "Search the SAMHSA treatment locator ↗"}</a>`;
