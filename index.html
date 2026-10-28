@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <div id="learn-tools">
+      <div id="learn-tools" hidden>
         <div class="learn-title-row">
           <h2 class="learn-title">Learn</h2>
           <!-- Explored counter -->
@@ -244,7 +244,7 @@
       <p class="hm-footer">SafeHarbor is educational support, not a substitute for a doctor, therapist, or emergency services.</p>
     </section>
 
-    <section id="learn-hub" class="learn-hub" aria-label="Learn and practice">
+    <section id="learn-hub" class="learn-hub" aria-label="Learn and practice" hidden>
       <div class="learn-hub-intro"><span class="sh-eyebrow">LEARN &amp; PRACTICE</span><h2>Knowledge and support, at your pace.</h2><p>Explore trusted information or try a small exercise for the moment you’re in.</p></div>
       <button class="learn-practice-card" type="button" data-open-tab="practice"><span class="practice-spark" aria-hidden="true">🌊</span><span><strong>Need something for right now?</strong><small>Try grounding, ride an urge, or untangle a thought</small></span><b aria-hidden="true">Explore tools&nbsp; →</b></button>
       <div class="learn-resource-title"><div><span class="sh-eyebrow">TRUSTED RESOURCES</span><h3>Explore what matters to you</h3></div><span class="sh-muted">From SAMHSA, NIDA, CDC &amp; more</span></div>
@@ -253,7 +253,7 @@
     <!-- ═══════════════════════════════════════════════════════════
          MAIN FEED
     ══════════════════════════════════════════════════════════════ -->
-    <main id="feed-container">
+    <main id="feed-container" hidden>
       <!-- Dynamic feed items injected by app.js -->
     </main>
 
@@ -327,11 +327,12 @@
     </section>
 
     <section id="support-view" class="sh-page" aria-label="Nearby support finder" hidden>
-      <div class="sh-page-heading"><span class="sh-eyebrow">LOCAL SUPPORT</span><h2>Find support near you</h2><p>Choose a location method to look for nearby treatment, counseling, and community services.</p></div>
-      <div class="support-privacy"><strong>Your location stays in this browser.</strong><span>We use it only to find nearby listings. The map provider receives the search coordinates when you open results.</span></div>
+      <div class="sh-page-heading"><span class="sh-eyebrow">LOCAL SUPPORT</span><h2>Find support near you</h2><p>Choose a location and a type of support to explore nearby options.</p></div>
+      <div class="support-privacy"><strong>You choose what location to share.</strong><span>Your location is used only after you choose it. The map and place-search providers receive the location query to show nearby options. You can enter a city or ZIP instead of sharing precise location.</span></div>
       <div class="support-controls"><button type="button" id="support-locate" class="sh-primary-btn">Use my current location</button><span>or</span><form id="support-search-form"><label class="sr-only" for="support-place">City or ZIP code</label><input id="support-place" type="text" placeholder="Enter city or ZIP code" autocomplete="postal-code" required><button type="submit" class="sh-secondary-btn">Search</button></form></div>
-      <p id="support-status" class="support-status" role="status" aria-live="polite">Search opens nearby support services in OpenStreetMap. For a crisis, call 988; for immediate danger, call 911.</p>
-      <iframe id="support-map" class="support-map" title="Map of nearby support services" loading="lazy" referrerpolicy="no-referrer" hidden></iframe>
+      <div class="support-filter-wrap"><strong>What would help?</strong><div class="support-filters" role="group" aria-label="Filter nearby support"><button type="button" class="support-filter active" aria-pressed="true" data-support-filter="naloxone">💜 Naloxone / Narcan</button><button type="button" class="support-filter" aria-pressed="false" data-support-filter="treatment">🏥 Treatment &amp; counseling</button><button type="button" class="support-filter" aria-pressed="false" data-support-filter="groups">👥 Support groups</button><button type="button" class="support-filter" aria-pressed="false" data-support-filter="harm-reduction">🧡 Harm reduction</button></div></div>
+      <p id="support-status" class="support-status" role="status" aria-live="polite">Choose a location to see map results. For a crisis, call 988; for immediate danger, call 911.</p>
+      <iframe id="support-map" class="support-map" title="Map of nearby support services" loading="lazy" referrerpolicy="no-referrer" allowfullscreen hidden></iframe>
       <div id="support-results" class="support-results" hidden></div>
       <div class="support-links"><a href="https://findtreatment.gov/" target="_blank" rel="noopener">FindTreatment.gov · SAMHSA treatment locator</a><a href="https://988lifeline.org/" target="_blank" rel="noopener">Call or text 988 for crisis support</a></div>
     </section>

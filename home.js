@@ -33,6 +33,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!viewTabs.includes(name)) return;
     if (name !== "practice" && practiceTimer) { clearInterval(practiceTimer); practiceTimer = null; }
     document.body.dataset.tab = name;
+    const routeViews = {
+      home: ["home-view"],
+      learn: ["learn-tools", "learn-hub", "feed-container"],
+      companion: ["companion-view"],
+      more: ["more-view"],
+      practice: ["practice-view"],
+      scenario: ["scenario-view"],
+      support: ["support-view"],
+    };
+    const activeViews = new Set(routeViews[name] || []);
+    ["home-view", "learn-tools", "learn-hub", "feed-container", "companion-view", "more-view", "practice-view", "scenario-view", "support-view"].forEach((id) => {
+      const view = $(id);
+      if (view) view.hidden = !activeViews.has(id);
+    });
     const companionPage = $("companion-view");
     const morePage = $("more-view");
     const practicePage = $("practice-view");
@@ -178,8 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   renderPractice();
 
-  // A short, sourced practice scenario. Any unsafe choice gets a gentle explanation,
-  // then lets the learner try again; it never grades or frames the outcome as a game.
+  // A short, sourced practice scenario. Feedback is supportive and never delays real help.
   const scenarioPanel = $("scenario-panel");
   const scenarioSteps = [
     { title: "You notice they won’t wake up", text: "Their breathing seems very slow. You don’t know what they took. What should you do first?", choices: [
@@ -200,39 +213,73 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
   let scenarioStep = 0;
   let scenarioFeedback = "";
+  let scenarioChoice = null;
   function renderScenario() {
     if (!scenarioPanel) return;
     if (scenarioStep >= scenarioSteps.length) {
-      scenarioPanel.innerHTML = `<span class="sh-eyebrow">PRACTICE COMPLETE</span><h3>You practiced the key steps</h3><p>Call 911. Give naloxone if available. Stay with the person and follow dispatcher guidance.</p><button type="button" class="sh-primary-btn" data-scenario-reset>Practice again</button>`;
+      scenarioPanel.innerHTML = `<div class="scenario-finish-art" aria-hidden="true">🛟</div><span class="sh-eyebrow">RESPONSE READY</span><h3>You practiced the key steps</h3><p>Call 911. Give naloxone if available. Stay with the person and follow dispatcher guidance.</p><div class="scenario-step-list"><span>✓ Call 911</span><span>✓ Give naloxone if available</span><span>✓ Stay and follow guidance</span></div><button type="button" class="sh-primary-btn" data-scenario-reset>Run it again</button>`;
       return;
     }
     const step = scenarioSteps[scenarioStep];
-    scenarioPanel.innerHTML = `<div class="scenario-progress">STEP ${scenarioStep + 1} OF ${scenarioSteps.length}</div><h3>${esc(step.title)}</h3><p>${esc(step.text)}</p>${scenarioFeedback ? `<p class="scenario-feedback" role="status">${esc(scenarioFeedback)}</p>` : ""}<div class="scenario-choices">${step.choices.map((choice, i) => `<button type="button" class="sh-secondary-btn" data-scenario-choice="${i}">${esc(choice[0])}</button>`).join("")}</div>`;
+    const selectedIsCorrect = scenarioChoice !== null && step.choices[scenarioChoice]?.[1] === "correct";
+    scenarioPanel.innerHTML = `<div class="scenario-topline"><span class="scenario-progress">RESPONSE SIM · ${scenarioStep + 1} / ${scenarioSteps.length}</span><span class="scenario-badge">🧭 Guided practice</span></div><div class="scenario-meter" aria-label="Step ${scenarioStep + 1} of ${scenarioSteps.length}"><span style="width:${Math.round(((scenarioStep + 1) / scenarioSteps.length) * 100)}%"></span></div><div class="scenario-scene"><span aria-hidden="true">${scenarioStep === 0 ? "📱" : scenarioStep === 1 ? "🧰" : "🤝"}</span><div><small>SCENE ${String(scenarioStep + 1).padStart(2, "0")}</small><h3>${esc(step.title)}</h3></div></div><p>${esc(step.text)}</p>${scenarioFeedback ? `<p class="scenario-feedback ${selectedIsCorrect ? "is-good" : ""}" role="status">${esc(scenarioFeedback)}</p>` : ""}<div class="scenario-choices">${step.choices.map((choice, i) => `<button type="button" class="scenario-choice ${scenarioChoice === i ? (choice[1] === "correct" ? "is-correct" : "is-retry") : ""}" data-scenario-choice="${i}"><span class="scenario-choice-icon" aria-hidden="true">${scenarioChoice === i ? (choice[1] === "correct" ? "✓" : "↻") : String.fromCharCode(65 + i)}</span><span>${esc(choice[0])}</span><span aria-hidden="true">→</span></button>`).join("")}</div>${scenarioStep > 0 ? `<button type="button" class="scenario-back" data-scenario-back>← Review previous step</button>` : ""}`;
   }
   scenarioPanel?.addEventListener("click", (event) => {
-    if (event.target.closest("[data-scenario-reset]")) { scenarioStep = 0; scenarioFeedback = ""; renderScenario(); return; }
+    if (event.target.closest("[data-scenario-reset]")) { scenarioStep = 0; scenarioFeedback = ""; scenarioChoice = null; renderScenario(); return; }
+    if (event.target.closest("[data-scenario-back]")) { scenarioStep = Math.max(0, scenarioStep - 1); scenarioFeedback = ""; scenarioChoice = null; renderScenario(); return; }
     const button = event.target.closest("[data-scenario-choice]");
     if (!button) return;
     const choice = scenarioSteps[scenarioStep].choices[Number(button.dataset.scenarioChoice)];
-    if (choice[1] === "correct") scenarioStep += 1;
+    scenarioChoice = Number(button.dataset.scenarioChoice);
     scenarioFeedback = choice[2];
+    if (choice[1] === "correct") {
+      renderScenario();
+      scenarioPanel.querySelectorAll("[data-scenario-choice]").forEach((option) => { option.disabled = true; });
+      const advance = document.createElement("button");
+      advance.type = "button"; advance.className = "sh-primary-btn scenario-continue"; advance.textContent = scenarioStep === scenarioSteps.length - 1 ? "Finish practice" : "Next scene →";
+      advance.addEventListener("click", () => { scenarioStep += 1; scenarioFeedback = ""; scenarioChoice = null; renderScenario(); });
+      scenarioPanel.appendChild(advance);
+      return;
+    }
     renderScenario();
   });
   renderScenario();
 
-  // Map uses OpenStreetMap in an iframe; precise coordinates are requested only on tap.
+  // The map opens only after the user chooses a location or enters a place.
   const supportMap = $("support-map");
   const supportResults = $("support-results");
   const supportStatus = $("support-status");
+  const supportCategories = {
+    naloxone: { label: "Naloxone / Narcan", query: "naloxone distribution naloxone training", link: "https://nextdistro.org/" },
+    treatment: { label: "Treatment & counseling", query: "substance use treatment counseling", link: "https://findtreatment.gov/" },
+    groups: { label: "Support groups", query: "recovery support groups substance use", link: "https://findtreatment.gov/" },
+    "harm-reduction": { label: "Harm reduction", query: "harm reduction services", link: "https://harmreduction.org/" },
+  };
+  let supportPlace = null;
+  let supportFilter = "naloxone";
   function showSupportLocation(label, query) {
     if (!supportMap || !supportResults) return;
-    const q = encodeURIComponent(query);
+    supportPlace = { label, query };
+    const category = supportCategories[supportFilter];
+    const search = `${category.query} near ${query}`;
+    const q = encodeURIComponent(search);
     supportMap.src = `https://maps.google.com/maps?q=${q}&z=13&output=embed`;
+    supportMap.title = `Map search for ${category.label} near ${label}`;
     supportMap.hidden = false;
-    supportResults.innerHTML = `<a href="https://www.google.com/maps/search/substance+use+support+near+${q}" target="_blank" rel="noopener">View treatment and support listings near ${esc(label)} ↗</a><a href="https://findtreatment.gov/" target="_blank" rel="noopener">Search the official SAMHSA treatment locator ↗</a>`;
+    supportResults.innerHTML = `<a href="https://www.google.com/maps/search/${q}" target="_blank" rel="noopener">Open ${esc(category.label)} results near ${esc(label)} ↗</a><a href="${category.link}" target="_blank" rel="noopener">${supportFilter === "naloxone" ? "Explore free naloxone access with Next Distro ↗" : supportFilter === "harm-reduction" ? "Learn about harm reduction services ↗" : "Search the SAMHSA treatment locator ↗"}</a>`;
     supportResults.hidden = false;
-    if (supportStatus) supportStatus.textContent = `Showing map and support search options for ${label}. Listings may change; verify details with the provider.`;
+    if (supportStatus) supportStatus.textContent = `Showing ${category.label.toLowerCase()} map results near ${label}. Listings may change; call ahead to confirm services and hours.`;
   }
+  document.querySelectorAll("[data-support-filter]").forEach((button) => button.addEventListener("click", () => {
+    supportFilter = button.dataset.supportFilter || "naloxone";
+    document.querySelectorAll("[data-support-filter]").forEach((filter) => {
+      const selected = filter === button;
+      filter.classList.toggle("active", selected);
+      filter.setAttribute("aria-pressed", String(selected));
+    });
+    if (supportPlace) showSupportLocation(supportPlace.label, supportPlace.query);
+    else if (supportStatus) supportStatus.textContent = `“${supportCategories[supportFilter].label}” selected. Choose a location to see nearby map results. For a crisis, call 988; for immediate danger, call 911.`;
+  }));
   $("support-search-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const place = $("support-place")?.value.trim();
