@@ -3411,7 +3411,9 @@ body[data-tab="home"] .hm-intent-text { max-width: 48ch; color: #41675d; font-si
   body[data-tab="learn"] #tab-bar,
   body[data-tab="companion"] #tab-bar,
   body[data-tab="more"] #tab-bar,
-  body[data-tab="practice"] #tab-bar {
+  body[data-tab="practice"] #tab-bar,
+  body[data-tab="scenario"] #tab-bar,
+  body[data-tab="support"] #tab-bar {
     position: fixed; top: 32px; right: auto; bottom: auto; left: 50%;
     width: min(480px, calc(100vw - 520px)); max-width: 480px; height: 50px; z-index: 110;
     padding: 4px; transform: translateX(-50%); display: flex; align-items: center; gap: 3px;
@@ -3422,7 +3424,9 @@ body[data-tab="home"] .hm-intent-text { max-width: 48ch; color: #41675d; font-si
   body[data-tab="learn"] .tab-btn,
   body[data-tab="companion"] .tab-btn,
   body[data-tab="more"] .tab-btn,
-  body[data-tab="practice"] .tab-btn { flex: 1; min-width: 0; flex-direction: row; justify-content: center; gap: 6px; padding: 7px 4px; color: #748780; font-size: .7rem; }
+  body[data-tab="practice"] .tab-btn,
+  body[data-tab="scenario"] .tab-btn,
+  body[data-tab="support"] .tab-btn { flex: 1; min-width: 0; flex-direction: row; justify-content: center; gap: 6px; padding: 7px 4px; color: #748780; font-size: .7rem; }
   body[data-tab] .tab-btn.active { color: #21776e; }
   body[data-tab] .tab-btn.active::after { top: auto; bottom: -3px; width: 18px; margin-left: -9px; background: #2a8b7d; }
   body[data-tab] .tab-btn svg { width: 18px; height: 18px; }
