@@ -66,7 +66,8 @@ I'm here to help you learn about substance use prevention, explore healthy copin
 
 **A few things to know:**
 - I'm an AI, not a therapist or doctor
-- Everything you share here is between you and me
+- Chat messages are sent to Google Gemini to generate replies; your journal and check-ins are not automatically shared
+- I can offer information and reflection, but I can't replace trusted people, counselors, healthcare professionals, or emergency services
 - If you're ever in immediate danger, call **911**; for mental health crisis support, call or text **988**
 
 What's on your mind today?`;

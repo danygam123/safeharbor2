@@ -189,7 +189,7 @@ const QUICK_FACTS = [
   {
     id: "fact-2",
     fact: "Did you know most states have Good Samaritan Laws?",
-    detail: "Good Samaritan Laws protect bystanders who call 911 or administer naloxone during an overdose from arrest, charge, or prosecution for minor drug offenses. The law is designed to prioritize saving lives over making arrests."
+    detail: "Some states have Good Samaritan laws that may protect a person experiencing an overdose or someone who calls for help from certain criminal penalties. Protections differ by state and situation, so don't assume a particular outcome. Call 911 in an emergency and follow the dispatcher’s instructions."
   },
   {
     id: "fact-3",
@@ -199,7 +199,7 @@ const QUICK_FACTS = [
   {
     id: "fact-4",
     fact: "Did you know that naloxone starts working in 2 to 3 minutes?",
-    detail: "Naloxone acts quickly to block opioid receptors. However, it only stays active in the body for 30 to 90 minutes. Because many opioids last longer than that, the person can relapse into an overdose, which is why calling 911 immediately is critical."
+    detail: "Naloxone can wear off before the opioid does, so overdose symptoms may return. Call 911, follow the dispatcher’s instructions, and stay with the person until emergency help arrives."
   }
 ];
 
@@ -214,7 +214,7 @@ const CHECKLIST_STEPS = [
     step: 2,
     title: "Call 911 Immediately",
     short: "Get professional medical help",
-    detail: "Dial 911. Provide your exact location. Clearly state: 'Someone is unresponsive and not breathing.' Do not worry about drug possession charges; Good Samaritan Laws protect you."
+    detail: "Dial 911 and give the dispatcher your location and what you see. Some states have laws that may offer protections when someone calls for overdose help, but protections vary by state and situation."
   },
   {
     step: 3,

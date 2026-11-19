@@ -2483,6 +2483,38 @@ select.form-input option { background: #0f172a; }
 .ai-input-row { gap:12px; align-items:flex-end; padding:12px 16px calc(16px + env(safe-area-inset-bottom)); }
 @media (max-width:600px) { .support-controls { align-items:stretch; flex-direction:column; } .support-controls form { width:100%; flex-basis:auto; } .support-map { height:250px; } }
 
+/* Curated community resources and human-support education */
+.partner-resource-section { max-width:940px; margin:30px auto 12px; }
+.partner-resource-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:12px; }
+.partner-resource-card { display:flex; flex-direction:column; align-items:flex-start; min-width:0; padding:20px; border:1px solid #d8e8e0; border-radius:20px; background:linear-gradient(155deg,#f8fcf9,#eef6f2); }
+.partner-resource-type { color:#54766b; font-size:.68rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+.partner-resource-card h4 { margin:10px 0 6px; color:#1c473f; font:700 1.08rem 'Outfit',sans-serif; }
+.partner-resource-card p { flex:1; color:#627a72; font-size:.84rem; line-height:1.55; }
+.partner-resource-card a { margin-top:12px; color:#087e73; font-weight:700; font-size:.82rem; }
+.companion-human-support { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; max-width:850px; margin:22px auto 8px; padding:18px; border:1px solid #cde5d9; border-radius:18px; background:#f0f8f3; color:#27483f; }
+.companion-human-support p { margin:5px 0 0; color:#627a72; font-size:.82rem; line-height:1.5; }
+.companion-human-support > div { flex:1 1 260px; }
+.companion-human-support a { color:#087e73; font-weight:750; }
+.support-emergency { display:grid; gap:9px; margin:18px 0; padding:18px; border:1px solid rgba(244,63,94,.3); border-radius:18px; background:rgba(244,63,94,.07); color:var(--text-primary); }
+.support-emergency > span { color:var(--text-secondary); font-size:.86rem; line-height:1.5; }
+.support-emergency > div { display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+.support-emergency a { display:inline-flex; min-height:42px; align-items:center; padding:9px 14px; border-radius:12px; background:#fff; color:#9f1239; font-weight:800; }
+.naloxone-lesson { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(240px,.8fr); gap:22px; margin:22px 0; padding:clamp(18px,4vw,30px); border:1px solid #cde5d9; border-radius:24px; background:linear-gradient(130deg,#f0f8f3,#f4f7fb); color:#27483f; }
+.naloxone-copy h3 { margin:6px 0 10px; color:#1c473f; font:700 1.4rem 'Outfit',sans-serif; }
+.naloxone-copy p,.naloxone-copy li { color:#536e65; font-size:.88rem; line-height:1.65; }
+.naloxone-copy ol { display:grid; gap:8px; padding-left:22px; }
+.naloxone-source { margin:16px 0 0; font-size:.76rem !important; }
+.naloxone-source a { color:#087e73; font-weight:700; }
+.naloxone-video { display:flex; min-height:250px; flex-direction:column; align-items:center; justify-content:center; padding:24px; border:1px dashed #a9c9bb; border-radius:18px; background:rgba(255,255,255,.65); text-align:center; }
+.naloxone-video > span { display:grid; width:56px; height:56px; place-items:center; margin-bottom:14px; border-radius:50%; background:#dcefe5; color:#087e73; font-size:1.25rem; }
+.naloxone-video strong { color:#1c473f; }
+.naloxone-video p { max-width:270px; margin:7px 0 0; color:#627a72; font-size:.82rem; line-height:1.55; }
+.support-directory-links { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:18px 0 30px; }
+.support-directory-links a { display:grid; gap:5px; padding:16px; border:1px solid var(--panel-border); border-radius:16px; background:rgba(255,255,255,.045); color:var(--text-primary); }
+.support-directory-links a span { color:var(--text-secondary); font-size:.78rem; line-height:1.45; }
+.support-local-heading { margin-top:30px; }
+@media(max-width:700px) { .partner-resource-grid,.support-directory-links { grid-template-columns:1fr; } .naloxone-lesson { grid-template-columns:1fr; } .naloxone-video { min-height:190px; } }
+
 
 
 /* ═══════════════════════════════════════════════════════════════════
