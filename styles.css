@@ -2484,13 +2484,20 @@ select.form-input option { background: #0f172a; }
 @media (max-width:600px) { .support-controls { align-items:stretch; flex-direction:column; } .support-controls form { width:100%; flex-basis:auto; } .support-map { height:250px; } }
 
 /* Curated community resources and human-support education */
-.partner-resource-section { max-width:940px; margin:30px auto 12px; }
-.partner-resource-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:12px; }
-.partner-resource-card { display:flex; flex-direction:column; align-items:flex-start; min-width:0; padding:20px; border:1px solid #d8e8e0; border-radius:20px; background:linear-gradient(155deg,#f8fcf9,#eef6f2); }
-.partner-resource-type { color:#54766b; font-size:.68rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
-.partner-resource-card h4 { margin:10px 0 6px; color:#1c473f; font:700 1.08rem 'Outfit',sans-serif; }
-.partner-resource-card p { flex:1; color:#627a72; font-size:.84rem; line-height:1.55; }
-.partner-resource-card a { margin-top:12px; color:#087e73; font-weight:700; font-size:.82rem; }
+.partner-resource-section { width:min(940px,calc(100% - 32px)); margin:30px auto 42px; padding:clamp(20px,4vw,32px); border:1px solid #cfe4da; border-radius:28px; background:radial-gradient(ellipse at 100% 0%,rgba(190,226,210,.48),transparent 38%),linear-gradient(145deg,#f4faf6,#edf4f7); box-shadow:0 18px 42px rgba(35,79,67,.08); }
+.partner-resource-heading { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:20px; }
+.partner-resource-heading h3 { margin:5px 0 4px; color:#1c473f; font:700 clamp(1.25rem,3vw,1.55rem) 'Outfit',sans-serif; }
+.partner-resource-heading p { margin:0; color:#627a72; font-size:.86rem; line-height:1.5; }
+.partner-resource-mark { display:grid; width:52px; height:52px; flex:0 0 52px; place-items:center; border:1px solid rgba(255,255,255,.9); border-radius:18px; background:linear-gradient(145deg,#d8efe5,#fff); box-shadow:0 8px 20px rgba(39,91,74,.1); color:#328977; font-size:1.35rem; }
+.partner-resource-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.partner-resource-card { display:flex; flex-direction:column; align-items:flex-start; min-width:0; padding:18px; border:1px solid rgba(205,226,216,.92); border-radius:19px; background:rgba(255,255,255,.8); box-shadow:0 6px 18px rgba(35,79,67,.045); transition:transform .18s ease,box-shadow .18s ease; }
+.partner-resource-card:hover { transform:translateY(-2px); box-shadow:0 12px 24px rgba(35,79,67,.09); }
+.partner-resource-type { color:#54766b; font-size:.66rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+.partner-resource-card h4 { margin:9px 0 6px; color:#1c473f; font:700 1.02rem 'Outfit',sans-serif; }
+.partner-resource-card p { flex:1; margin-bottom:12px; color:#627a72; font-size:.81rem; line-height:1.55; }
+.partner-resource-card a { display:inline-flex; align-items:center; gap:6px; margin-top:auto; color:#087e73; font-weight:750; font-size:.8rem; }
+.partner-resource-card a:focus-visible { outline:3px solid rgba(8,126,115,.28); outline-offset:3px; border-radius:4px; }
+.partner-resource-note { margin:15px 0 0; color:#6b8279; font-size:.71rem; line-height:1.5; }
 .companion-human-support { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; max-width:850px; margin:22px auto 8px; padding:18px; border:1px solid #cde5d9; border-radius:18px; background:#f0f8f3; color:#27483f; }
 .companion-human-support p { margin:5px 0 0; color:#627a72; font-size:.82rem; line-height:1.5; }
 .companion-human-support > div { flex:1 1 260px; }
@@ -2513,7 +2520,7 @@ select.form-input option { background: #0f172a; }
 .support-directory-links a { display:grid; gap:5px; padding:16px; border:1px solid var(--panel-border); border-radius:16px; background:rgba(255,255,255,.045); color:var(--text-primary); }
 .support-directory-links a span { color:var(--text-secondary); font-size:.78rem; line-height:1.45; }
 .support-local-heading { margin-top:30px; }
-@media(max-width:700px) { .partner-resource-grid,.support-directory-links { grid-template-columns:1fr; } .naloxone-lesson { grid-template-columns:1fr; } .naloxone-video { min-height:190px; } }
+@media(max-width:700px) { .partner-resource-grid,.support-directory-links { grid-template-columns:1fr; } .partner-resource-section { width:calc(100% - 24px); margin:24px auto 34px; padding:19px; border-radius:22px; } .partner-resource-heading { margin-bottom:15px; } .partner-resource-mark { width:44px; height:44px; flex-basis:44px; border-radius:15px; } .partner-resource-card { padding:16px; } .naloxone-lesson { grid-template-columns:1fr; } .naloxone-video { min-height:190px; } }
 
 
 

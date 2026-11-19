@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.dataset.tab = name;
     const routeViews = {
       home: ["home-view"],
-      learn: ["learn-tools", "learn-hub", "feed-container"],
+      learn: ["learn-tools", "learn-hub", "feed-container", "community-resources"],
       companion: ["companion-view"],
       more: ["more-view"],
       practice: ["practice-view"],
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       support: ["support-view"],
     };
     const activeViews = new Set(routeViews[name] || []);
-    ["home-view", "learn-tools", "learn-hub", "feed-container", "companion-view", "more-view", "practice-view", "scenario-view", "support-view"].forEach((id) => {
+    ["home-view", "learn-tools", "learn-hub", "feed-container", "community-resources", "companion-view", "more-view", "practice-view", "scenario-view", "support-view"].forEach((id) => {
       const view = $(id);
       if (view) view.hidden = !activeViews.has(id);
     });
