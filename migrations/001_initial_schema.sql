@@ -51,18 +51,6 @@ CREATE TABLE IF NOT EXISTS public.personal_goals (
   UNIQUE (user_id, local_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.volunteer_submissions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  title TEXT NOT NULL,
-  url TEXT,
-  audience TEXT,
-  description TEXT,
-  author_name TEXT,
-  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
 -- ───────────────────────── Helpers ─────────────────────────
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN LANGUAGE sql SECURITY DEFINER STABLE SET search_path = public AS $$
@@ -85,9 +73,8 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.checkins ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.journal_entries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.personal_goals ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.volunteer_submissions ENABLE ROW LEVEL SECURITY;
 
--- profiles: own row only; users can NEVER grant themselves is_admin
+-- profiles: own row only; never let a user grant themselves elevated access
 DROP POLICY IF EXISTS profiles_select ON public.profiles;
 DROP POLICY IF EXISTS profiles_insert ON public.profiles;
 DROP POLICY IF EXISTS profiles_update ON public.profiles;
@@ -109,16 +96,5 @@ BEGIN
   END LOOP;
 END $$;
 
--- volunteer_submissions: anyone signed in can submit; owners see their own; admins see/manage all
-DROP POLICY IF EXISTS vs_insert ON public.volunteer_submissions;
-DROP POLICY IF EXISTS vs_select ON public.volunteer_submissions;
-DROP POLICY IF EXISTS vs_admin_update ON public.volunteer_submissions;
-CREATE POLICY vs_insert ON public.volunteer_submissions FOR INSERT
-  WITH CHECK (user_id = auth.uid() AND status = 'pending');
-CREATE POLICY vs_select ON public.volunteer_submissions FOR SELECT
-  USING (user_id = auth.uid() OR status = 'approved' OR public.is_admin());
-CREATE POLICY vs_admin_update ON public.volunteer_submissions FOR UPDATE
-  USING (public.is_admin()) WITH CHECK (public.is_admin());
-
--- ───────────────────────── To make yourself an admin (run manually, once) ─────────────────────────
--- UPDATE public.profiles SET is_admin = TRUE WHERE id = (SELECT id FROM auth.users WHERE email = 'you@example.com');
+-- Preserve the admin-role RLS guard for existing database setups.
+-- Existing project tables and columns are not destructively removed by this setup migration.

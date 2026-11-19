@@ -1,7 +1,9 @@
 // Safe Harbor — External Service Configuration
 // ================================================================
-// IMPORTANT: This file is listed in .gitignore and must NEVER be
-// committed to Git or pushed to GitHub. It contains credentials.
+// This file is public client configuration and is committed with the app.
+// The Supabase anon key is designed for browsers; database security must be
+// enforced with Row Level Security. Never put a service-role key or Gemini
+// API key in this file.
 // ================================================================
 //
 // HOW TO FILL THIS IN:
@@ -13,8 +15,8 @@
 //    d. In the Supabase SQL Editor, run the file: migrations/001_initial_schema.sql
 //
 // 2. GEMINI API KEY — https://aistudio.google.com
-//    a. Click "Get API key" and create a key for a new project
-//    b. Copy the key into GEMINI_API_KEY below
+//    Set GEMINI_API_KEY in Vercel Project Settings → Environment Variables.
+//    The key is used only by api/chat.js and must never be committed here.
 //
 // ================================================================
 

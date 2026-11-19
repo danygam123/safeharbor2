@@ -2,9 +2,9 @@
 // Talks to /api/chat (Vercel serverless function) which holds the Gemini key server-side.
 // No API key is ever present in the browser.
 //
-// PRIVACY: The companion does NOT automatically receive journal entries
-// or check-in data. Only messages the user explicitly types are sent.
-// The API key is stored only in config.js (gitignored).
+// PRIVACY: Companion requests include the current chat context only. Journal
+// entries and check-in data are not automatically added to those requests.
+// The Gemini API key is stored server-side in the hosting environment.
 
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";

@@ -1303,86 +1303,9 @@ main {
 }
 
 /* ==========================================
-   VOLUNTEER & ADMIN STYLES
-   ========================================== */
-.admin-submission-item {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.admin-submission-item-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.admin-submission-item-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: white;
-}
-
-.admin-submission-item-desc {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-}
-
-.admin-submission-item-author {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.admin-action-btn-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.admin-action-btn {
-  flex: 1;
-  border: none;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 6px 0;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  color: white;
-  transition: all var(--transition-speed);
-}
-
-.admin-action-btn.approve {
-  background: var(--success-color);
-}
-.admin-action-btn.approve:hover {
-  background: #059669;
-}
-
-.admin-action-btn.reject {
-  background: var(--emergency-color);
-}
-.admin-action-btn.reject:hover {
-  background: #be123c;
-}
-
-/* ==========================================
    SOURCE BADGES
    ========================================== */
-.card-org-tag.volunteer {
-  background: rgba(245, 158, 11, 0.15) !important;
-  border: 1px solid rgba(245, 158, 11, 0.4) !important;
-  color: #fcd34d !important;
-}
+
 
 /* Timeline goal item styles */
 .goal-history-item {
@@ -2506,21 +2429,17 @@ select.form-input option { background: #0f172a; }
 .support-emergency > span { color:var(--text-secondary); font-size:.86rem; line-height:1.5; }
 .support-emergency > div { display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
 .support-emergency a { display:inline-flex; min-height:42px; align-items:center; padding:9px 14px; border-radius:12px; background:#fff; color:#9f1239; font-weight:800; }
-.naloxone-lesson { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(240px,.8fr); gap:22px; margin:22px 0; padding:clamp(18px,4vw,30px); border:1px solid #cde5d9; border-radius:24px; background:linear-gradient(130deg,#f0f8f3,#f4f7fb); color:#27483f; }
+.naloxone-lesson { display:grid; grid-template-columns:1fr; margin:22px 0; padding:clamp(18px,4vw,30px); border:1px solid #cde5d9; border-radius:24px; background:linear-gradient(130deg,#f0f8f3,#f4f7fb); color:#27483f; }
 .naloxone-copy h3 { margin:6px 0 10px; color:#1c473f; font:700 1.4rem 'Outfit',sans-serif; }
 .naloxone-copy p,.naloxone-copy li { color:#536e65; font-size:.88rem; line-height:1.65; }
 .naloxone-copy ol { display:grid; gap:8px; padding-left:22px; }
 .naloxone-source { margin:16px 0 0; font-size:.76rem !important; }
 .naloxone-source a { color:#087e73; font-weight:700; }
-.naloxone-video { display:flex; min-height:250px; flex-direction:column; align-items:center; justify-content:center; padding:24px; border:1px dashed #a9c9bb; border-radius:18px; background:rgba(255,255,255,.65); text-align:center; }
-.naloxone-video > span { display:grid; width:56px; height:56px; place-items:center; margin-bottom:14px; border-radius:50%; background:#dcefe5; color:#087e73; font-size:1.25rem; }
-.naloxone-video strong { color:#1c473f; }
-.naloxone-video p { max-width:270px; margin:7px 0 0; color:#627a72; font-size:.82rem; line-height:1.55; }
 .support-directory-links { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:18px 0 30px; }
 .support-directory-links a { display:grid; gap:5px; padding:16px; border:1px solid var(--panel-border); border-radius:16px; background:rgba(255,255,255,.045); color:var(--text-primary); }
 .support-directory-links a span { color:var(--text-secondary); font-size:.78rem; line-height:1.45; }
 .support-local-heading { margin-top:30px; }
-@media(max-width:700px) { .partner-resource-grid,.support-directory-links { grid-template-columns:1fr; } .partner-resource-section { width:calc(100% - 24px); margin:24px auto 34px; padding:19px; border-radius:22px; } .partner-resource-heading { margin-bottom:15px; } .partner-resource-mark { width:44px; height:44px; flex-basis:44px; border-radius:15px; } .partner-resource-card { padding:16px; } .naloxone-lesson { grid-template-columns:1fr; } .naloxone-video { min-height:190px; } }
+@media(max-width:700px) { .partner-resource-grid,.support-directory-links { grid-template-columns:1fr; } .partner-resource-section { width:calc(100% - 24px); margin:24px auto 34px; padding:19px; border-radius:22px; } .partner-resource-heading { margin-bottom:15px; } .partner-resource-mark { width:44px; height:44px; flex-basis:44px; border-radius:15px; } .partner-resource-card { padding:16px; } }
 
 
 

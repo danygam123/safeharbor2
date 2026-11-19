@@ -5,6 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearSearchBtn = document.getElementById("clear-search-btn");
   const progressCount = document.getElementById("progress-count");
   const progressBadge = document.getElementById("progress-badge");
+
+  const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+  const safeExternalUrl = (value) => {
+    try {
+      const url = new URL(String(value), window.location.href);
+      return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+    } catch (_) {
+      return "";
+    }
+  };
   
   // Drawer Elements
   const drawerBackdrop = document.getElementById("drawer-backdrop");
@@ -12,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const menuDrawer = document.getElementById("menu-drawer");
   const emergencyDrawer = document.getElementById("emergency-drawer");
   const goalsDrawer = document.getElementById("goals-drawer");
-  const volunteerAdminDrawer = document.getElementById("volunteer-admin-drawer");
   
   const menuBtn = document.getElementById("menu-btn");
   const menuDrawerClose = document.getElementById("menu-drawer-close");
@@ -20,12 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const emergencyInfoBtn = document.getElementById("emergency-info-btn");
   const emergencyDrawerClose = document.getElementById("emergency-drawer-close");
   const goalsDrawerClose = document.getElementById("goals-drawer-close");
-  const volunteerAdminDrawerClose = document.getElementById("volunteer-admin-drawer-close");
   
   const menuViewSavedBtn = document.getElementById("menu-view-saved-btn");
   const menuResetExplBtn = document.getElementById("menu-reset-expl-btn");
   const menuOpenGoalsBtn = document.getElementById("menu-open-goals-btn");
-  const menuOpenPortalBtn = document.getElementById("menu-open-portal-btn");
   const menuChangeRoleBtn = document.getElementById("menu-change-role-btn");
   
   // Overlays / Modals
@@ -51,26 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const unmetGoalsCount = document.getElementById("unmet-goals-count");
   const goalsHistoryList = document.getElementById("goals-history-list");
   
-  // Volunteer & Admin Elements
-  const portalTabVolunteer = document.getElementById("portal-tab-volunteer");
-  const portalTabAdmin = document.getElementById("portal-tab-admin");
-  const volunteerSectionWrapper = document.getElementById("volunteer-section-wrapper");
-  const adminSectionWrapper = document.getElementById("admin-section-wrapper");
-  
-  const volunteerSignupBox = document.getElementById("volunteer-signup-box");
-  const volunteerPostBox = document.getElementById("volunteer-post-box");
-  const volunteerSignupForm = document.getElementById("volunteer-signup-form");
-  const volunteerPostForm = document.getElementById("volunteer-post-form");
-  const volWelcomeMsg = document.getElementById("vol-welcome-msg");
-  const volLogoutBtn = document.getElementById("vol-logout-btn");
-  
-  const adminLoginBox = document.getElementById("admin-login-box");
-  const adminDashboardBox = document.getElementById("admin-dashboard-box");
-  const adminLoginBtn = document.getElementById("admin-login-btn");
-  const adminEmailInput = document.getElementById("admin-email");
-  const adminPassInput = document.getElementById("admin-pass");
-  const adminQueueContainer = document.getElementById("admin-queue-container");
-  const adminLogoutBtn = document.getElementById("admin-logout-btn");
 
   // App State
   let state = {
@@ -87,11 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // New Feature States
     selectedRole: null,
     goals: [], // Array of { id, text, timestamp, status: 'active' | 'met' | 'unmet' }
-    volunteerInfo: null, // { name, email, affiliation }
-    pendingVideos: [], // Submitted by volunteers, pending admin review
-    approvedVideos: [], // Approved volunteer submissions, merged into feed
-    isAdmin: false,
-    portalTab: "volunteer" // 'volunteer' or 'admin'
   };
 
   // Initialize State from LocalStorage
@@ -125,16 +109,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const goalsData = localStorage.getItem("safeharbor_goals");
       if (goalsData) state.goals = JSON.parse(goalsData);
 
-      // Volunteer State
-      const volData = localStorage.getItem("safeharbor_volunteer_info");
-      if (volData) state.volunteerInfo = JSON.parse(volData);
-
-      // Submissions State
-      const pendingData = localStorage.getItem("safeharbor_pending_videos");
-      if (pendingData) state.pendingVideos = JSON.parse(pendingData);
-
-      const approvedData = localStorage.getItem("safeharbor_approved_videos");
-      if (approvedData) state.approvedVideos = JSON.parse(approvedData);
+      // Remove obsolete browser-only submission data from prior app versions.
+      ["safeharbor_volunteer_info", "safeharbor_pending_videos", "safeharbor_approved_videos"]
+        .forEach((key) => localStorage.removeItem(key));
       
       // Active Goal Check-in Check
       const activeGoal = state.goals.find(g => g.status === 'active');
@@ -151,9 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Failed to load local storage state", e);
     }
     updateProgressUI();
-    syncVolunteerPortalUI();
     renderGoalsUI();
-    renderAdminQueue();
   }
 
   // ── Goals cloud mirror (only when signed in; localStorage stays the source of truth) ──
@@ -215,9 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
       
       localStorage.setItem("safeharbor_selected_role", state.selectedRole || "");
       localStorage.setItem("safeharbor_goals", JSON.stringify(state.goals));
-      localStorage.setItem("safeharbor_volunteer_info", state.volunteerInfo ? JSON.stringify(state.volunteerInfo) : "");
-      localStorage.setItem("safeharbor_pending_videos", JSON.stringify(state.pendingVideos));
-      localStorage.setItem("safeharbor_approved_videos", JSON.stringify(state.approvedVideos));
     } catch (e) {
       console.error("Failed to save state to local storage", e);
     }
@@ -323,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
   emergencyDrawerClose.addEventListener("click", closeAllDrawers);
   
   goalsDrawerClose.addEventListener("click", closeAllDrawers);
-  volunteerAdminDrawerClose.addEventListener("click", closeAllDrawers);
   
   drawerBackdrop.addEventListener("click", (e) => {
     if (e.target === drawerBackdrop) {
@@ -378,14 +349,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Open New Drawers from Menu
   menuOpenGoalsBtn.addEventListener("click", () => {
     openDrawer(goalsDrawer);
     renderGoalsUI();
-  });
-
-  menuOpenPortalBtn.addEventListener("click", () => {
-    openDrawer(volunteerAdminDrawer);
   });
 
   menuChangeRoleBtn.addEventListener("click", () => {
@@ -708,6 +674,9 @@ document.addEventListener("DOMContentLoaded", () => {
       state.goals.forEach(g => {
         const item = document.createElement("div");
         item.className = "goal-history-item";
+        const goalText = document.createElement("div");
+        goalText.className = "goal-history-text";
+        goalText.textContent = g.text;
         
         const dateStr = new Date(g.timestamp).toLocaleDateString(undefined, { 
           month: 'short', day: 'numeric', year: '2-digit' 
@@ -727,282 +696,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         item.innerHTML = `
           <div style="flex: 1;">
-            <div class="goal-history-text">${g.text}</div>
             <div class="goal-history-date">${dateStr}</div>
           </div>
           <span class="${badgeClass}">${statusText}</span>
         `;
+        item.querySelector("div").prepend(goalText);
         goalsHistoryList.appendChild(item);
-      });
-    }
-  }
-
-  // ==========================================
-  // VOLUNTEER & ADMIN LOGIC
-  // ==========================================
-  
-  // Tab switching inside Volunteer/Admin drawer
-  portalTabVolunteer.addEventListener("click", () => {
-    portalTabVolunteer.classList.add("active");
-    portalTabAdmin.classList.remove("active");
-    volunteerSectionWrapper.style.display = "flex";
-    adminSectionWrapper.style.display = "none";
-    state.portalTab = "volunteer";
-  });
-
-  portalTabAdmin.addEventListener("click", () => {
-    portalTabAdmin.classList.add("active");
-    portalTabVolunteer.classList.remove("active");
-    adminSectionWrapper.style.display = "flex";
-    volunteerSectionWrapper.style.display = "none";
-    state.portalTab = "admin";
-    syncAdminDashboardUI();
-  });
-
-  // Volunteer form sync
-  function syncVolunteerPortalUI() {
-    if (state.volunteerInfo) {
-      volunteerSignupBox.style.display = "none";
-      volunteerPostBox.style.display = "block";
-      volWelcomeMsg.innerHTML = `Welcome, <strong>${state.volunteerInfo.name}</strong> (${state.volunteerInfo.affiliation})`;
-    } else {
-      volunteerSignupBox.style.display = "block";
-      volunteerPostBox.style.display = "none";
-    }
-  }
-
-  // Volunteer registration submit
-  volunteerSignupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = document.getElementById("vol-name").value.trim();
-    const email = document.getElementById("vol-email").value.trim();
-    const affiliation = document.getElementById("vol-affiliation").value.trim();
-
-    if (!name || !email || !affiliation) return;
-
-    state.volunteerInfo = { name, email, affiliation };
-    saveState();
-    syncVolunteerPortalUI();
-    showToast("Volunteer account active!", "success");
-    volunteerSignupForm.reset();
-  });
-
-  // Volunteer Post Video submit
-  volunteerPostForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const title = document.getElementById("post-title").value.trim();
-    const url = document.getElementById("post-url").value.trim();
-    const audience = document.getElementById("post-audience").value;
-    const desc = document.getElementById("post-desc").value.trim();
-
-    if (!title || !url || !desc) return;
-
-    // Create custom pending submission object
-    const newSubmission = {
-      id: "vol-sub-" + Date.now(),
-      title: title,
-      org: state.volunteerInfo.affiliation,
-      type: "video", // Only videos allowed per guidelines
-      audiences: [audience],
-      topics: ["overdose-response"], // Default fallback tag
-      url: url,
-      description: desc,
-      volunteerSubmitted: true,
-      authorName: state.volunteerInfo.name,
-      authorEmail: state.volunteerInfo.email,
-      timestamp: Date.now()
-    };
-
-    state.pendingVideos.push(newSubmission);
-    saveState();
-    renderAdminQueue();
-    volunteerPostForm.reset();
-    showToast("Submitted! Pending Admin Review.", "success");
-  });
-
-  // Volunteer Logout
-  volLogoutBtn.addEventListener("click", () => {
-    if (confirm("Logout of volunteer profile?")) {
-      state.volunteerInfo = null;
-      saveState();
-      syncVolunteerPortalUI();
-      showToast("Logged out", "info");
-    }
-  });
-
-  // Admin Section Login logic
-  function syncAdminDashboardUI() {
-    if (state.isAdmin) {
-      adminLoginBox.style.display = "none";
-      adminDashboardBox.style.display = "block";
-      renderAdminQueue();
-    } else {
-      adminLoginBox.style.display = "block";
-      adminDashboardBox.style.display = "none";
-    }
-  }
-
-  // Admin sign-in: real Supabase auth + profiles.is_admin role check.
-  // Fails closed: no Supabase config, bad credentials, or missing/false
-  // is_admin all result in NO admin access.
-  async function handleAdminLogin() {
-    const db = window.supabaseClient;
-    if (!db) {
-      showToast("Admin sign-in requires Supabase to be configured.", "info");
-      return;
-    }
-    const email = adminEmailInput ? adminEmailInput.value.trim() : "";
-    const pass = adminPassInput ? adminPassInput.value : "";
-    if (!email || !pass) {
-      showToast("Enter your admin email and password.", "info");
-      return;
-    }
-
-    adminLoginBtn.disabled = true;
-    try {
-      const { data: authData, error: authErr } = await db.auth.signInWithPassword({ email, password: pass });
-      if (authErr || !authData?.user) {
-        showToast("Sign-in failed. Check your credentials.", "info");
-        return;
-      }
-      const { data: profile, error: profErr } = await db
-        .from("profiles")
-        .select("is_admin")
-        .eq("id", authData.user.id)
-        .single();
-
-      if (profErr || !profile || profile.is_admin !== true) {
-        showToast("This account does not have admin access.", "info");
-        return;
-      }
-      state.isAdmin = true;
-      syncAdminDashboardUI();
-      showToast("Authorized as Admin", "success");
-    } catch (err) {
-      console.error("Admin login error:", err);
-      showToast("Could not sign in. Please try again.", "info");
-    } finally {
-      adminLoginBtn.disabled = false;
-      if (adminPassInput) adminPassInput.value = "";
-    }
-  }
-
-  if (adminLoginBtn) adminLoginBtn.addEventListener("click", handleAdminLogin);
-
-  adminLogoutBtn.addEventListener("click", () => {
-    state.isAdmin = false;
-    syncAdminDashboardUI();
-    showToast("Logged out of Admin Portal", "info");
-  });
-
-  // Approve & Reject Functions
-  window.approveSubmission = function(id) {
-    const itemIndex = state.pendingVideos.findIndex(v => v.id === id);
-    if (itemIndex === -1) return;
-
-    const approvedItem = state.pendingVideos.splice(itemIndex, 1)[0];
-    state.approvedVideos.push(approvedItem);
-    
-    saveState();
-    renderAdminQueue();
-    renderFeed();
-    showToast("Video approved and posted to feed!", "success");
-  };
-
-  window.rejectSubmission = function(id) {
-    if (confirm("Are you sure you want to reject this volunteer submission?")) {
-      const itemIndex = state.pendingVideos.findIndex(v => v.id === id);
-      if (itemIndex === -1) return;
-
-      state.pendingVideos.splice(itemIndex, 1);
-      saveState();
-      renderAdminQueue();
-      showToast("Submission rejected", "info");
-    }
-  };
-
-  // Delete an already-approved volunteer video from the live feed
-  window.deleteApprovedVideo = function(id) {
-    if (confirm("Remove this volunteer-submitted video from the live feed?")) {
-      const idx = state.approvedVideos.findIndex(v => v.id === id);
-      if (idx === -1) return;
-      state.approvedVideos.splice(idx, 1);
-      saveState();
-      renderAdminQueue();
-      renderFeed();
-      showToast("Video removed from feed", "info");
-    }
-  };
-
-  // Render Admin Pending Queue + Approved Videos section
-  function renderAdminQueue() {
-    adminQueueContainer.innerHTML = "";
-
-    // ---- PENDING submissions ----
-    const pendingHeader = document.createElement("div");
-    pendingHeader.style.cssText = "font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;";
-    pendingHeader.textContent = "Pending Review";
-    adminQueueContainer.appendChild(pendingHeader);
-
-    if (state.pendingVideos.length === 0) {
-      const empty = document.createElement("div");
-      empty.style.cssText = "text-align:center;color:var(--text-muted);font-size:0.8rem;padding:20px 10px;border:1px dashed var(--panel-border);border-radius:12px;";
-      empty.textContent = "No pending submissions.";
-      adminQueueContainer.appendChild(empty);
-    } else {
-      state.pendingVideos.forEach(v => {
-        const item = document.createElement("div");
-        item.className = "admin-submission-item";
-        item.innerHTML = `
-          <div class="admin-submission-item-meta">
-            <span class="card-tag audience" style="text-transform:capitalize;">Audience: ${v.audiences[0]}</span>
-            <span class="admin-submission-item-author">By: ${v.authorName} (${v.org})</span>
-          </div>
-          <div class="admin-submission-item-title">${v.title}</div>
-          <div class="admin-submission-item-desc">${v.description}</div>
-          <a href="${v.url}" target="_blank" style="font-size:0.72rem;color:var(--accent-color);word-break:break-all;margin-top:2px;text-decoration:underline;">Open Link: ${v.url}</a>
-          <div class="admin-action-btn-row">
-            <button class="admin-action-btn approve" onclick="approveSubmission('${v.id}')">Approve</button>
-            <button class="admin-action-btn reject" onclick="rejectSubmission('${v.id}')">Reject</button>
-          </div>
-        `;
-        adminQueueContainer.appendChild(item);
-      });
-    }
-
-    // ---- APPROVED (live) volunteer videos ----
-    const divider = document.createElement("div");
-    divider.style.cssText = "border-top:1px solid var(--panel-border);margin:16px 0 12px;";
-    adminQueueContainer.appendChild(divider);
-
-    const approvedHeader = document.createElement("div");
-    approvedHeader.style.cssText = "font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;";
-    approvedHeader.textContent = `Live Volunteer Videos (${state.approvedVideos.length})`;
-    adminQueueContainer.appendChild(approvedHeader);
-
-    if (state.approvedVideos.length === 0) {
-      const empty = document.createElement("div");
-      empty.style.cssText = "text-align:center;color:var(--text-muted);font-size:0.8rem;padding:20px 10px;border:1px dashed var(--panel-border);border-radius:12px;";
-      empty.textContent = "No approved volunteer videos in the feed yet.";
-      adminQueueContainer.appendChild(empty);
-    } else {
-      state.approvedVideos.forEach(v => {
-        const item = document.createElement("div");
-        item.className = "admin-submission-item";
-        item.style.borderColor = "rgba(245,158,11,0.25)";
-        item.innerHTML = `
-          <div class="admin-submission-item-meta">
-            <span class="card-tag audience" style="text-transform:capitalize;">Audience: ${v.audiences[0]}</span>
-            <span class="admin-submission-item-author">By: ${v.authorName} (${v.org})</span>
-          </div>
-          <div class="admin-submission-item-title">${v.title}</div>
-          <div class="admin-submission-item-desc">${v.description}</div>
-          <a href="${v.url}" target="_blank" style="font-size:0.72rem;color:var(--accent-color);word-break:break-all;margin-top:2px;text-decoration:underline;">Open Link: ${v.url}</a>
-          <div class="admin-action-btn-row">
-            <button class="admin-action-btn reject" onclick="deleteApprovedVideo('${v.id}')" style="background:#7c3aed;">Remove from Feed</button>
-          </div>
-        `;
-        adminQueueContainer.appendChild(item);
       });
     }
   }
@@ -1013,8 +712,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderFeed() {
     feedContainer.innerHTML = "";
     
-    // Merge standard clinical library with approved volunteer videos
-    const allResources = [...window.RESOURCES_DATA, ...state.approvedVideos];
+    const allResources = window.RESOURCES_DATA;
     
     // Filter Content Cards
     let filteredResources = allResources.filter((item) => {
@@ -1202,21 +900,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Generate HTML list tags
-      const topicTags = resource.topics.map(t => `<span class="card-tag topic">${t.replace("-", " ")}</span>`).join("");
-      const audienceTags = resource.audiences.map(a => `<span class="card-tag audience">${a}</span>`).join("");
+      const topicTags = resource.topics.map(t => `<span class="card-tag topic">${escapeHTML(t.replace("-", " "))}</span>`).join("");
+      const audienceTags = resource.audiences.map(a => `<span class="card-tag audience">${escapeHTML(a)}</span>`).join("");
       
-      // Check if volunteer submitted to toggle badge style
-      let badgeHTML = "";
-      if (resource.volunteerSubmitted) {
-        badgeHTML = `<span class="card-org-tag volunteer">Volunteer-Submitted</span>`;
-      } else {
-        badgeHTML = `<span class="card-org-tag">${resource.org}</span>`;
-      }
+      const badgeHTML = `<span class="card-org-tag">${escapeHTML(resource.org)}</span>`;
 
       card.innerHTML = `
-        <div class="card-thumbnail card-thumbnail-${resource.type}">
+        <div class="card-thumbnail card-thumbnail-${escapeHTML(resource.type)}">
           ${badgeHTML}
-          <div class="card-type-icon-wrapper" title="${resource.type.toUpperCase()} content">
+          <div class="card-type-icon-wrapper" title="${escapeHTML(resource.type.toUpperCase())} content">
             ${typeIcon}
           </div>
           ${isExplored ? `
@@ -1230,16 +922,16 @@ document.addEventListener("DOMContentLoaded", () => {
             ${topicTags}
             ${audienceTags}
           </div>
-          <h3 class="card-title">${resource.title}</h3>
-          <p class="card-description">${resource.description}</p>
+          <h3 class="card-title">${escapeHTML(resource.title)}</h3>
+          <p class="card-description">${escapeHTML(resource.description)}</p>
         </div>
         <div class="card-footer">
-          <button class="card-action-btn bookmark-btn ${isSaved ? 'saved' : ''}" onclick="toggleBookmark('${resource.id}', event)" aria-label="Bookmark resource">
+          <button class="card-action-btn bookmark-btn ${isSaved ? 'saved' : ''}" aria-label="Bookmark resource">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
             </svg>
           </button>
-          <button class="card-action-btn visit-btn" onclick="exploreResource('${resource.id}', '${resource.url}')">
+          <button class="card-action-btn visit-btn">
             View Resource
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1248,6 +940,12 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
         </div>
       `;
+      card.querySelector(".bookmark-btn").addEventListener("click", (event) => window.toggleBookmark(resource.id, event));
+      card.querySelector(".visit-btn").addEventListener("click", () => {
+        const url = safeExternalUrl(resource.url);
+        if (url) window.exploreResource(resource.id, url);
+        else showToast("This resource link is unavailable.", "info");
+      });
       feedContainer.appendChild(card);
       feedIndex++;
     });

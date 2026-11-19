@@ -1,8 +1,10 @@
 # Safe Harbor — .gitignore
 
-# === SENSITIVE CREDENTIALS ===
-# config.js contains your Supabase URL, Anon Key, and Gemini API Key.
-# NEVER commit this file. Fill it in locally only.
+# === LOCAL SECRETS / DEPLOYMENT STATE ===
+.env
+.env.*
+!.env.example
+.vercel/
 
 # === DEPENDENCIES ===
 node_modules/
@@ -17,3 +19,7 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+
+# Local recovery artifacts (keep out of source releases)
+/styles.css.conflict-backup
+/tatus

@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ── DOM refs ────────────────────────────────────────────────────
   const checkinDrawer    = document.getElementById("checkin-drawer");
-  const checkinForm      = document.getElementById("checkin-form");
   const checkinSteps     = document.querySelectorAll(".checkin-step");
   const checkinPrevBtn   = document.getElementById("checkin-prev");
   const checkinNextBtn   = document.getElementById("checkin-next");
